@@ -86,7 +86,7 @@ export default function ContactPage() {
   return (
     <>
       <section className="border-b border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
           <p className="text-sm font-medium text-brand">Contact</p>
           <h1 className="mt-3 max-w-2xl font-serif text-4xl leading-tight text-ink sm:text-5xl">
             Reach the people who write and review these guides.
@@ -97,7 +97,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div
           role="alert"
           className="flex flex-col gap-4 rounded-3xl border border-blush-border bg-blush-bg p-6 sm:flex-row sm:items-center sm:justify-between"

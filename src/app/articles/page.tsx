@@ -16,7 +16,7 @@ export default function ArticlesPage() {
   return (
     <>
       <section className="border-b border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
           <p className="text-sm font-medium text-brand">Articles & topics</p>
           <h1 className="mt-3 max-w-3xl font-serif text-4xl leading-tight text-ink sm:text-5xl">
             Nine guides, written to be read on the worst day of someone’s week.
@@ -74,7 +74,7 @@ export default function ArticlesPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <p aria-live="polite" className="text-sm text-body">
           {results.length} {results.length === 1 ? 'guide' : 'guides'}
           {category !== 'All Topics' && ` in ${category}`}

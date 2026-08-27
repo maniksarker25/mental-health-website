@@ -9,7 +9,7 @@ const icons = [BookOpenIcon, SendIcon, HeartHandshakeIcon];
 
 export function HowItWorksSection() {
   return (
-    <section id="how-it-works" aria-labelledby="how-heading" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+    <section id="how-it-works" aria-labelledby="how-heading" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
       <div className="max-w-2xl">
         <p className="text-sm font-medium text-brand">How it works</p>
         <h2 id="how-heading" className="mt-3 font-serif text-3xl leading-tight text-ink sm:text-4xl">

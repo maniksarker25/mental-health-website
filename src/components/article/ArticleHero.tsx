@@ -28,7 +28,7 @@ export function ArticleHero({ topic }: { topic: Topic }) {
       <img src={topic.featuredImage} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
       <div aria-hidden="true" className="absolute inset-0 bg-[rgba(13,21,18,0.74)]" />
 
-      <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
         <Link
           href="/articles"
           className="no-print inline-flex items-center gap-2 text-sm text-white/80 transition-colors duration-150 ease-gentle hover:text-white"

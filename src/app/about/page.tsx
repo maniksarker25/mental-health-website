@@ -34,7 +34,7 @@ export default function AboutPage() {
   return (
     <>
       <section className="border-b border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
           <p className="text-sm font-medium text-brand">About us</p>
           <h1 className="mt-3 max-w-3xl font-serif text-4xl leading-[1.12] text-ink sm:text-5xl">
             Demystifying mental health support through zero-barrier, shame-free communication.
@@ -46,7 +46,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section aria-labelledby="problem-heading" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <section aria-labelledby="problem-heading" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <h2 id="problem-heading" className="font-serif text-3xl leading-tight text-ink sm:text-4xl">
@@ -82,7 +82,7 @@ export default function AboutPage() {
       </section>
 
       <section aria-labelledby="framework-heading" className="border-y border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           <div className="max-w-2xl">
             <p className="text-sm font-medium text-brand">Clinical advisory framework</p>
             <h2 id="framework-heading" className="mt-3 font-serif text-3xl leading-tight text-ink sm:text-4xl">
@@ -116,7 +116,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section aria-labelledby="ethics-heading" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <section aria-labelledby="ethics-heading" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <h2 id="ethics-heading" className="font-serif text-3xl leading-tight text-ink sm:text-4xl">
@@ -148,7 +148,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-20">
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-20">
         <CrisisBanner />
       </div>
     </>

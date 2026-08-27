@@ -78,7 +78,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
     <article>
       <ArticleHero topic={topic} />
 
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-16">
+      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-16">
         <aside className="no-print lg:col-span-3">
           <nav aria-label="On this page" className="lg:sticky lg:top-24">
             <p className="text-xs font-semibold uppercase tracking-widest text-ink">On this page</p>
@@ -195,7 +195,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
       </div>
 
       <section aria-labelledby="related-heading" className="no-print border-t border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
           <h2 id="related-heading" className="font-serif text-3xl text-ink">
             More guides you can dispatch
           </h2>

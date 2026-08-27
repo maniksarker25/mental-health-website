@@ -160,7 +160,7 @@ export function AppDownloadSection() {
         className="pointer-events-none absolute -right-40 bottom-1/4 h-96 w-96 rounded-full bg-brand-tint/60 blur-3xl dark:bg-brand/10"
       />
 
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
           {/* Left Column: Information, Value Prop & Download Buttons */}
           <div className="lg:col-span-6 xl:col-span-7">

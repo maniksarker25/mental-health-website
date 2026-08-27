@@ -14,7 +14,7 @@ const trustPills = [
 export function HomeHero() {
   return (
     <section className="relative overflow-hidden border-b border-line bg-surface">
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:py-24 lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:py-24 lg:px-8">
         <div className="lg:col-span-7">
           <motion.p
             initial={{ opacity: 0, y: 8 }}

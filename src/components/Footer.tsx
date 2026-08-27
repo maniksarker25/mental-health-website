@@ -6,7 +6,7 @@ import { crisisLines, navLinks } from '../data/site';
 export function Footer() {
   return (
     <footer className="no-print border-t border-line bg-surface">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <p className="font-serif text-2xl text-ink">Mental Health Support</p>

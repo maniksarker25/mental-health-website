@@ -20,7 +20,7 @@ export function Navbar() {
 
   return (
     <header className="no-print sticky top-0 z-50 border-b border-line bg-canvas">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2.5" aria-label="Mental Health Support home">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand">
             <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true" fill="none">
@@ -96,7 +96,7 @@ export function Navbar() {
             transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
             className="overflow-hidden border-t border-line bg-surface lg:hidden"
           >
-            <nav aria-label="Mobile" className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6">
+            <nav aria-label="Mobile" className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 sm:px-6">
               {navLinks.map((link) => {
                 const isActive = link.to === '/' ? pathname === '/' : pathname.startsWith(link.to);
                 return (

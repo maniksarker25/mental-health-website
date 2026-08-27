@@ -27,7 +27,7 @@ const guarantees = [
 export function PrivacySection() {
   return (
     <section aria-labelledby="privacy-heading" className="border-y border-line bg-surface">
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-20">
+      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-20">
         <div className="lg:col-span-5">
           <p className="text-sm font-medium text-brand">Safety architecture</p>
           <h2 id="privacy-heading" className="mt-3 font-serif text-3xl leading-tight text-ink sm:text-4xl">

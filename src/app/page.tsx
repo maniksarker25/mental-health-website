@@ -31,7 +31,7 @@ export default function HomePage() {
       <HowItWorksSection />
 
       <section aria-labelledby="pacer-heading" className="border-y border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           <div className="max-w-2xl">
             <p className="text-sm font-medium text-brand">Relief right now</p>
             <h2 id="pacer-heading" className="mt-3 font-serif text-3xl leading-tight text-ink sm:text-4xl">
@@ -48,7 +48,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="featured-heading" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <section aria-labelledby="featured-heading" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
             <p className="text-sm font-medium text-brand">Guides & articles</p>
@@ -95,7 +95,7 @@ export default function HomePage() {
 
       <PrivacySection />
 
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <CrisisBanner />
       </div>
     </>
