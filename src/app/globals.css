@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand: #2e5e52;
+  --brand-strong: #24483f;
+  --brand-tint: #ebf0ec;
+  --canvas: #f5f6f2;
+  --surface: #ffffff;
+  --surface-sunken: #f0f2ed;
+  --ink: #18231f;
+  --body: #6b7a75;
+  --line: #e1e6e2;
+  --tone-sky-bg: #e6f0f6;
+  --tone-sky-border: #b9d7e8;
+  --tone-sky-text: #1e4e68;
+  --tone-lavender-bg: #efebf8;
+  --tone-lavender-border: #d4c9ec;
+  --tone-lavender-text: #45336b;
+  --tone-sand-bg: #f7f2e8;
+  --tone-sand-border: #e6d6bc;
+  --tone-sand-text: #5f4b23;
+  --tone-blush-bg: #f9eceb;
+  --tone-blush-border: #ebc3c0;
+  --tone-blush-text: #6f322e;
+  --tone-mist-bg: #ebf0ec;
+  --tone-mist-border: #cfdbd2;
+  --tone-mist-text: #2e5e52;
+}
+
+.dark {
+  --brand: #63a08d;
+  --brand-strong: #7ab7a3;
+  --brand-tint: #1e2b26;
+  --canvas: #121816;
+  --surface: #1a2320;
+  --surface-sunken: #151d1a;
+  --ink: #eef2ee;
+  --body: #a3b0aa;
+  --line: #2b3733;
+  --tone-sky-bg: #16262f;
+  --tone-sky-border: #2b4657;
+  --tone-sky-text: #a8cee5;
+  --tone-lavender-bg: #211d2e;
+  --tone-lavender-border: #3d3455;
+  --tone-lavender-text: #c9bde8;
+  --tone-sand-bg: #262115;
+  --tone-sand-border: #4a3e26;
+  --tone-sand-text: #e0cba4;
+  --tone-blush-bg: #2a1a19;
+  --tone-blush-border: #4d302d;
+  --tone-blush-text: #ecb6b1;
+  --tone-mist-bg: #1a2420;
+  --tone-mist-border: #33443c;
+  --tone-mist-text: #93c4b2;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--canvas);
+  color: var(--body);
+  font-family: 'Inter', system-ui, sans-serif;
+  transition: background-color 300ms cubic-bezier(0.23, 1, 0.32, 1),
+    color 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+::selection {
+  background-color: var(--brand-tint);
+  color: var(--ink);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
