@@ -76,6 +76,7 @@ export interface Topic {
   };
   faqs: Faq[];
   pacer: PacerPreset[];
+  contentHtml?: string;
 }
 
 export type InquiryType =

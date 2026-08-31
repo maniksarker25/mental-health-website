@@ -31,10 +31,12 @@ export const crisisLines: CrisisLine[] = [
 
 
 export const navLinks = [
-{ label: 'Home', to: '/' },
-{ label: 'Articles & Topics', to: '/articles' },
-{ label: 'About Us', to: '/about' },
-{ label: 'Contact', to: '/contact' }];
+  { label: 'Home', to: '/' },
+  { label: 'Resources', to: '/resources' },
+  { label: 'Community', to: '/community' },
+  { label: 'About Us', to: '/about' },
+  { label: 'Contact', to: '/contact' },
+];
 
 
 export const howItWorks = [
@@ -95,9 +97,9 @@ export const commitments = [
 
 export const advisors = [
 {
-  name: 'Dr. Sarah Jenkins, PsyD',
-  role: 'Clinical Director, Anxiety & Trauma',
-  focus: 'Reviews exposure-based and grounding content; 14 years in outpatient CBT practice.'
+  name: 'Dr. Skelton',
+  role: 'Clinical Director & Lead Advisor',
+  focus: 'Reviews clinically vetted guidance, exposure-based tools, and grounding strategies.'
 },
 {
   name: 'Dr. Marcus Oyelaran, MD',

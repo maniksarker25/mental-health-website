@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { toast } from 'sonner';
-import { AlertTriangleIcon, MessageSquareIcon, PhoneCallIcon, SendIcon } from 'lucide-react';
+import { SendIcon } from 'lucide-react';
 import { contactFaqs } from '../../data/site';
 import { FaqAccordion } from '../../components/article/FaqAccordion';
 import type { ContactSubmission, InquiryType } from '../../types/topic';
@@ -98,39 +98,7 @@ export default function ContactPage() {
       </section>
 
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <div
-          role="alert"
-          className="flex flex-col gap-4 rounded-3xl border border-blush-border bg-blush-bg p-6 sm:flex-row sm:items-center sm:justify-between"
-        >
-          <div className="flex gap-4">
-            <AlertTriangleIcon className="mt-0.5 h-6 w-6 shrink-0 text-blush-text" />
-            <div>
-              <h2 className="font-serif text-xl text-ink">This form is not monitored for emergencies.</h2>
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink">
-                If you or someone you know is in immediate physical danger or mental health crisis, do not use this
-                contact form. Call 988 or text 741741 immediately.
-              </p>
-            </div>
-          </div>
-          <div className="flex shrink-0 flex-wrap gap-2">
-            <a
-              href="tel:988"
-              className="inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2.5 text-sm font-medium text-white"
-            >
-              <PhoneCallIcon className="h-4 w-4" />
-              Call 988
-            </a>
-            <a
-              href="sms:741741?&body=HOME"
-              className="inline-flex items-center gap-2 rounded-full border border-blush-border bg-surface px-4 py-2.5 text-sm font-medium text-ink"
-            >
-              <MessageSquareIcon className="h-4 w-4" />
-              Text 741741
-            </a>
-          </div>
-        </div>
-
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
+        <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <form onSubmit={handleSubmit} noValidate className="rounded-3xl border border-line bg-surface p-6 sm:p-8">
               <h2 className="font-serif text-2xl text-ink">Send a message</h2>
