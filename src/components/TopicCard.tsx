@@ -42,7 +42,7 @@ export function TopicCard({ topic, featured = false }: TopicCardProps) {
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <h3 className={cn('font-serif text-ink', featured ? 'text-2xl leading-snug' : 'text-xl leading-snug')}>
-          <Link href={`/articles/${topic.id}`} className="transition-colors duration-150 ease-gentle hover:text-brand">
+          <Link href={`/resources/${topic.id}`} className="transition-colors duration-150 ease-gentle hover:text-brand">
             {topic.title}
           </Link>
         </h3>
@@ -59,7 +59,7 @@ export function TopicCard({ topic, featured = false }: TopicCardProps) {
               {countSections(topic)} sections
             </span>
             <Link
-              href={`/articles/${topic.id}`}
+              href={`/resources/${topic.id}`}
               className="ml-auto inline-flex items-center gap-1.5 font-medium text-brand transition-colors duration-150 ease-gentle hover:text-ink"
             >
               Read guide
