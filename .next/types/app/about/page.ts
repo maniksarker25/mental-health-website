@@ -1,4 +1,4 @@
-// File: D:\Manik Sarker\Frontend Development\mental-health-website\src\app\about\page.tsx
+// File: D:\Manik Sarker\Projects\mention-health-project\mental-health-website\src\app\about\page.tsx
 import * as entry from '../../../../src/app/about/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

@@ -13,7 +13,7 @@ export const topics: Topic[] = [
   featuredImage: "/6f1a0d9f-8579-46cc-ac9d-c99dc170b4df.jpg",
   excerpt:
   'A panic attack is not a heart attack, and chronic worry is not a character flaw. Here is what your nervous system is actually doing, and what reliably calms it.',
-  reviewer: 'Reviewed by Dr. Sarah Jenkins, PsyD',
+  reviewer: 'Reviewed by Dr. Skelton',
   updated: 'Updated August 2026',
   intro: [
   'Anxiety is the body preparing for a threat that has not arrived. That preparation is not imaginary — the heart really does beat faster, the chest really does tighten, thinking really does narrow. What is inaccurate is the size of the threat, not the sensation.',
@@ -110,7 +110,7 @@ export const topics: Topic[] = [
   featuredImage: "/bbd80de0-72e7-4a34-bead-99f81d08bcba.jpg",
   excerpt:
   'Depression is not sadness turned up. It is a flattening of reward, energy, and self-narrative — and it responds to action taken before the motivation returns.',
-  reviewer: 'Reviewed by Dr. Priya Raman, PhD',
+  reviewer: 'Reviewed by Dr. Skelton',
   updated: 'Updated August 2026',
   intro: [
   'People often expect depression to feel like crying. More often it feels like nothing: food without taste, music without pull, a to-do list that may as well be in another language.',
@@ -205,7 +205,7 @@ export const topics: Topic[] = [
   featuredImage: "/bc248231-c940-4e95-a939-9f1a54a31f7a.jpg",
   excerpt:
   'Burnout is an occupational condition with three measurable dimensions. Rest alone will not fix it — the demands and the recovery both have to change.',
-  reviewer: 'Reviewed by Dr. Marcus Oyelaran, MD',
+  reviewer: 'Reviewed by Dr. Skelton',
   updated: 'Updated August 2026',
   intro: [
   'Burnout is not simply being tired. The World Health Organization defines it as a syndrome from chronic workplace stress that has not been successfully managed, with three parts: exhaustion, mental distance or cynicism, and reduced effectiveness.',
@@ -300,7 +300,7 @@ export const topics: Topic[] = [
   featuredImage: "/ff47f82f-c7ed-4863-b7ca-fd3bac014a4a.jpg",
   excerpt:
   'Trauma is stored differently from ordinary memory, which is why it returns as sensation rather than story. Grounding and trauma-focused therapy both work with that.',
-  reviewer: 'Reviewed by Dr. Sarah Jenkins, PsyD',
+  reviewer: 'Reviewed by Dr. Skelton',
   updated: 'Updated August 2026',
   intro: [
   'A traumatic memory is not filed the way other memories are. Under extreme threat, the brain prioritises survival over narrative, so fragments — a smell, a tone of voice, a body position — get stored without a timestamp.',
@@ -395,7 +395,7 @@ export const topics: Topic[] = [
   featuredImage: "/89ea5304-a8bb-41e5-9dea-1e2b10aaa20c.jpg",
   excerpt:
   'The five stages were never meant as a sequence. Modern grief care focuses on oscillation — moving between loss and life — rather than on reaching acceptance.',
-  reviewer: 'Reviewed by Renée Alvarez, LCSW',
+  reviewer: 'Reviewed by Dr. Skelton',
   updated: 'Updated August 2026',
   intro: [
   'Grief is not only about death. It follows divorce, diagnosis, estrangement, miscarriage, and the loss of a future you had assumed. Any of those can produce the full physical weight of mourning.',
@@ -489,7 +489,7 @@ export const topics: Topic[] = [
   featuredImage: "/e4423b3d-c70b-425e-b57a-69877c5c940e.jpg",
   excerpt:
   'Chronic insomnia is maintained less by the original trigger than by what we do about it. CBT-I outperforms sleeping medication over the long term.',
-  reviewer: 'Reviewed by Dr. Marcus Oyelaran, MD',
+  reviewer: 'Reviewed by Dr. Skelton',
   updated: 'Updated August 2026',
   intro: [
   'Almost everyone sleeps badly sometimes. Insomnia becomes chronic when the response to a bad night — earlier bedtimes, longer lie-ins, more effort — accidentally weakens the link between bed and sleep.',
@@ -584,7 +584,7 @@ export const topics: Topic[] = [
   featuredImage: "/24be4b57-e071-4f09-9726-22df0281e8d1.jpg",
   excerpt:
   'Loneliness is a signal, like hunger. It responds less to more socialising than to a small number of interactions with real depth.',
-  reviewer: 'Reviewed by Renée Alvarez, LCSW',
+  reviewer: 'Reviewed by Dr. Skelton',
   updated: 'Updated August 2026',
   intro: [
   'Loneliness is the felt distance between the connection you have and the connection you need. It is about quality, which is why it survives busy calendars and crowded offices.',
@@ -678,7 +678,7 @@ export const topics: Topic[] = [
   featuredImage: "/3014125d-fa77-4475-ad19-6fa3c021102a.jpg",
   excerpt:
   'OCD is not tidiness. It is a cycle of intrusive doubt and relief-seeking, and it responds to a specific, well-evidenced therapy.',
-  reviewer: 'Reviewed by Dr. Sarah Jenkins, PsyD',
+  reviewer: 'Reviewed by Dr. Skelton',
   updated: 'Updated August 2026',
   intro: [
   'OCD has two parts: obsessions, which are unwanted intrusive thoughts, images, or urges, and compulsions, which are the things done to make the discomfort stop.',
@@ -773,7 +773,7 @@ export const topics: Topic[] = [
   featuredImage: "/2c24f0fa-868a-4068-8e48-996bef5a7078.jpg",
   excerpt:
   'Substance use disorders are treatable medical conditions. Confrontation and ultimatums predict worse outcomes than curiosity and access to care.',
-  reviewer: 'Reviewed by Dr. Marcus Oyelaran, MD',
+  reviewer: 'Reviewed by Dr. Skelton',
   updated: 'Updated August 2026',
   intro: [
   'Substance use exists on a spectrum, and a diagnosis rests on the impact on your life — health, relationships, obligations — not on how much you consume relative to others.',

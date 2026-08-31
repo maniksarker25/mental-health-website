@@ -13,5 +13,5 @@ export default async function ResourceAliasPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  redirect(`/articles/${id}`);
+  redirect(`/resources/${id}`);
 }
