@@ -7,6 +7,18 @@ import { categories, topics } from '../../data/topics';
 import { searchTopics } from '../../utils/article';
 import { cn } from '../../utils/cn';
 import { toneStyles, topicIcons } from '../../utils/tone';
+import { BreathingPacer } from '@/src/components/BreathingPacer';
+
+const resourcesPacer = [
+  {
+    label: '4-7-8 calming',
+    inhale: 4,
+    hold: 7,
+    exhale: 8,
+    description:
+      'If you arrived here mid-spike, start with this. Four seconds in, hold for seven, out for eight — the long exhale is what tells your body the emergency is over.',
+  },
+];
 
 export default function ResourcesPage() {
   const [query, setQuery] = useState('');
@@ -17,18 +29,20 @@ export default function ResourcesPage() {
   return (
     <>
       {/* Header & Filter Section */}
-      <section className="border-b border-line bg-surface">
+      <section className="border-b border-line bg-canvas">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
           <div className="inline-flex items-center gap-2 rounded-full border border-line bg-canvas px-3.5 py-1.5 text-xs font-medium text-brand">
             <HeartHandshakeIcon className="h-3.5 w-3.5" />
-            <span>Support Resource Packets</span>
+            <span>Mental Health Library</span>
           </div>
 
           <h1 className="mt-3 max-w-3xl font-serif text-4xl leading-tight text-ink sm:text-5xl">
-            Clinically vetted guides you can send to someone you care about.
+            Clinically reviewed resources written
+            in plain language.
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-body">
-            When a friend, relative, or loved one is experiencing anxiety, depression, burnout, or grief and talking directly feels heavy, explore these quiet, shame-free educational guides to send anonymous support.
+            Simple, text-based educational guides designed to be calm, grounded, and free of
+            clinical jargon. Search by title or symptom description, or filter by topic below.
           </p>
 
           {/* Search Box */}
@@ -183,6 +197,26 @@ export default function ResourcesPage() {
             </button>
           </div>
         )}
+
+      </section>
+
+      {/* Instant Grounding Breathing Pacer */}
+      <section aria-labelledby="pacer-heading" className="border-b border-line bg-surface">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+          <div className="max-w-2xl">
+            <p className="text-sm font-medium text-brand">Relief right now</p>
+            <h2 id="pacer-heading" className="mt-3 font-serif text-3xl leading-tight text-ink sm:text-4xl">
+              Before you read anything else, take four breaths.
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-body">
+              Nothing to install, nothing to sign up for. Follow the circle — it expands as you breathe in and contracts
+              as you breathe out.
+            </p>
+          </div>
+          <div className="mt-10">
+            <BreathingPacer presets={resourcesPacer} />
+          </div>
+        </div>
       </section>
     </>
   );

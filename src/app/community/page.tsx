@@ -258,9 +258,9 @@ export default function CommunityPage() {
   });
 
   return (
-    <div className="min-h-screen bg-canvas pb-20">
+    <div className="min-h-screen  pb-20">
       {/* Header Banner */}
-      <section className="border-b border-line bg-surface py-12 sm:py-16">
+      <section className="border-b border-line bg-canvas py-12 sm:py-16 ">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-2xl">
@@ -316,7 +316,7 @@ export default function CommunityPage() {
       </section>
 
       {/* Main Post Feed Area */}
-      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Community Guidelines Notice */}
         <div className="mb-8 flex items-start gap-3 rounded-2xl border border-line bg-surface p-4 text-xs text-body">
           <ShieldCheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
