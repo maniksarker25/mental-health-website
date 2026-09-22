@@ -14,16 +14,17 @@ import {
   HeartIcon,
   BrainIcon,
   CheckIcon,
-  ArrowUpRightIcon,
   Edit3Icon,
   SettingsIcon,
   HomeIcon,
   ClockIcon,
   ChevronLeftIcon,
+  ChevronRightIcon,
   QrCodeIcon,
   StarIcon,
   CheckCircle2Icon,
-  SparklesIcon
+  SparklesIcon,
+  LockIcon
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
@@ -176,17 +177,17 @@ export function AppDownloadSection() {
               Send anonymous support right from your phone.
             </h2>
 
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-body sm:text-lg">
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-body">
               When starting the conversation feels heavy, dispatch a clinically vetted resource directly
               by SMS or email. No sender identity attached, zero accounts required for the recipient,
               and nothing logged on our servers.
             </p>
 
             {/* Key feature points */}
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <div className="flex items-start gap-3 rounded-2xl border border-line bg-canvas/70 p-4 transition-colors duration-150 hover:bg-canvas">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand">
-                  <ShieldCheckIcon className="h-4 w-4" />
+            <div className="mt-7 grid gap-5 sm:grid-cols-2">
+              <div className="flex items-start gap-3">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-tint text-brand">
+                  <ShieldCheckIcon className="h-3.5 w-3.5" />
                 </span>
                 <div>
                   <h3 className="text-sm font-semibold text-ink">100% Anonymous Delivery</h3>
@@ -196,9 +197,9 @@ export function AppDownloadSection() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 rounded-2xl border border-line bg-canvas/70 p-4 transition-colors duration-150 hover:bg-canvas">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand">
-                  <SparklesIcon className="h-4 w-4" />
+              <div className="flex items-start gap-3">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-tint text-brand">
+                  <SparklesIcon className="h-3.5 w-3.5" />
                 </span>
                 <div>
                   <h3 className="text-sm font-semibold text-ink">Clinically Vetted Guides</h3>
@@ -210,8 +211,8 @@ export function AppDownloadSection() {
             </div>
 
             {/* Store Download Buttons */}
-            <div className="mt-10">
-              <p className="text-xs font-semibold uppercase tracking-widest text-ink">
+            <div className="mt-8 border-t border-line pt-8">
+              <p className="text-xs font-medium text-body">
                 Download the free app
               </p>
               <div className="mt-3.5 flex flex-wrap items-center gap-3.5">
@@ -341,12 +342,8 @@ export function AppDownloadSection() {
             </div>
 
             {/* User Rating / Endorsement Bar */}
-            <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-line pt-6 text-xs text-body">
-              <div className="flex items-center gap-1 text-amber-500">
-                {[...Array(5)].map((_, i) => (
-                  <StarIcon key={i} className="h-3.5 w-3.5 fill-current" />
-                ))}
-              </div>
+            <div className="mt-8 flex flex-wrap items-center gap-2 border-t border-line pt-6 text-xs text-body">
+              <StarIcon className="h-3.5 w-3.5 fill-current text-brand" />
               <span className="font-medium text-ink">4.9 / 5.0 Rating</span>
               <span className="hidden sm:inline">·</span>
               <span>100% Free & Open Care Resources</span>
@@ -358,15 +355,15 @@ export function AppDownloadSection() {
           {/* Right Column: Interactive Realistic Smartphone Mockup */}
           <div className="relative flex justify-center lg:col-span-6 xl:col-span-5">
             {/* Screen Switcher Control Above Mockup */}
-            <div className="absolute -top-11 flex items-center rounded-full border border-line bg-canvas p-1 text-xs shadow-sm">
+            <div className="absolute -top-11 flex items-center gap-2 text-xs">
               <button
                 type="button"
                 onClick={() => setActiveScreen('topics')}
                 className={cn(
-                  'rounded-full px-3.5 py-1 font-medium transition-all duration-150 ease-gentle',
+                  'rounded-full px-3.5 py-1.5 font-medium transition-all duration-150 ease-gentle',
                   activeScreen === 'topics'
-                    ? 'bg-surface font-semibold text-ink shadow-sm'
-                    : 'text-body hover:text-ink'
+                    ? 'bg-brand text-white shadow-sm'
+                    : 'border border-line text-body hover:text-ink'
                 )}
               >
                 1. Topic Catalog
@@ -375,10 +372,10 @@ export function AppDownloadSection() {
                 type="button"
                 onClick={() => setActiveScreen('review')}
                 className={cn(
-                  'rounded-full px-3.5 py-1 font-medium transition-all duration-150 ease-gentle',
+                  'rounded-full px-3.5 py-1.5 font-medium transition-all duration-150 ease-gentle',
                   activeScreen === 'review'
-                    ? 'bg-surface font-semibold text-ink shadow-sm'
-                    : 'text-body hover:text-ink'
+                    ? 'bg-brand text-white shadow-sm'
+                    : 'border border-line text-body hover:text-ink'
                 )}
               >
                 2. Review & Send
@@ -418,12 +415,10 @@ export function AppDownloadSection() {
                     >
                       <div>
                         {/* Header */}
-                        <div className="flex items-center justify-between pt-1">
-                          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#557569] dark:text-[#88b5a5]">
+                        <div className="flex items-center pt-1">
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 py-1 text-[10px] font-medium text-body">
+                            <LockIcon className="h-3 w-3" />
                             Anonymous
-                          </span>
-                          <span className="flex h-7 w-7 items-center justify-center rounded-full border border-line bg-surface text-body">
-                            <SettingsIcon className="h-3.5 w-3.5" />
                           </span>
                         </div>
 
@@ -475,7 +470,7 @@ export function AppDownloadSection() {
                                     </p>
                                   </div>
                                 </div>
-                                <ArrowUpRightIcon className="h-4 w-4 shrink-0 text-brand opacity-60 transition-transform group-hover:scale-110 group-hover:opacity-100" />
+                                <ChevronRightIcon className="h-4 w-4 shrink-0 text-body opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:opacity-100" />
                               </button>
                             );
                           })}

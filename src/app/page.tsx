@@ -30,7 +30,7 @@ export default function HomePage() {
       <AnonymousMessagingSteps />
 
       {/* 4. Instant Grounding Breathing Pacer */}
-      <section aria-labelledby="pacer-heading" className="border-b border-line bg-surface">
+      {/* <section aria-labelledby="pacer-heading" className="border-b border-line bg-surface">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
           <div className="max-w-2xl">
             <p className="text-sm font-medium text-brand">Relief right now</p>
@@ -46,7 +46,7 @@ export default function HomePage() {
             <BreathingPacer presets={homePacer} />
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* 5. Packages & Pricing (3 Packages) */}
       <PackagesSection />
