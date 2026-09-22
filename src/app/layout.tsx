@@ -58,7 +58,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="flex min-h-screen w-full flex-col bg-canvas text-body antialiased">
+      <body className="flex min-h-screen w-full flex-col  text-body antialiased">
         <ThemeProvider>
           <AuthProvider>
             <a

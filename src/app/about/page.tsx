@@ -30,7 +30,7 @@ export default function AboutPage() {
       </section>
 
       {/* The Problem & Impact Stats */}
-      <section aria-labelledby="problem-heading" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <section aria-labelledby="problem-heading" className="mx-auto bg-canvas max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-6">
             <span className="text-xs font-semibold uppercase tracking-wider text-brand">Why We Started</span>
@@ -71,11 +71,11 @@ export default function AboutPage() {
             <div className="lg:col-span-5">
               <div className="relative mx-auto max-w-md overflow-hidden rounded-3xl border border-line bg-canvas shadow-lg">
                 <img
-                  src="/2c24f0fa-868a-4068-8e48-996bef5a7078.jpg"
-                  alt="Founder & Clinical Director"
+                  src="/founder-david-vance.jpg"
+                  alt="David Vance, Founder & Mental Health Advocate"
                   className="aspect-[4/5] w-full object-cover"
                 />
-                <div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-line bg-surface/95 p-4 backdrop-blur-md">
+                <div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-line bg-surface p-4 shadow-lg">
                   <h3 className="font-serif text-lg font-bold text-ink">David Vance</h3>
                   <p className="text-xs text-brand font-medium">Founder & Mental Health Advocate</p>
                 </div>
