@@ -1,12 +1,30 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { CheckIcon, ArrowRightIcon, SparklesIcon } from 'lucide-react';
-import { packagesData } from '../../data/packages';
+import { useRouter } from 'next/navigation';
+import { CheckIcon, ArrowRightIcon, SparklesIcon, ShieldCheckIcon, CheckCircle2Icon } from 'lucide-react';
+import { toast } from 'sonner';
+import { packagesData, PackageTier } from '../../data/packages';
+import { useAuth } from '../../contexts/AuthContext';
 import { cn } from '../../utils/cn';
 
 export function PackagesSection() {
+  const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
+  const [selectedPkg, setSelectedPkg] = useState<PackageTier | null>(null);
+
+  const handlePurchase = (pkg: PackageTier) => {
+    if (!isAuthenticated) {
+      toast.info('Please sign in or create an account to purchase this package.');
+      router.push(`/login?redirect=${encodeURIComponent('/#packages-section')}`);
+      return;
+    }
+
+    // If logged in, show purchase confirmation
+    setSelectedPkg(pkg);
+  };
+
   return (
     <section
       id="packages-section"
@@ -79,8 +97,9 @@ export function PackagesSection() {
               </div>
 
               <div className="mt-8 border-t border-line pt-6">
-                <Link
-                  href={pkg.ctaHref}
+                <button
+                  type="button"
+                  onClick={() => handlePurchase(pkg)}
                   className={cn(
                     'inline-flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-medium transition-all duration-150',
                     pkg.popular
@@ -90,12 +109,68 @@ export function PackagesSection() {
                 >
                   <span>{pkg.ctaLabel}</span>
                   <ArrowRightIcon className="h-4 w-4" />
-                </Link>
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Purchase Confirmation Modal (For Logged In Users) */}
+      {selectedPkg && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-3xl border border-line bg-surface p-6 sm:p-8 shadow-2xl">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-white mb-4">
+              <CheckCircle2Icon className="h-6 w-6" />
+            </div>
+
+            <h3 className="font-serif text-2xl font-bold text-ink">
+              Confirm {selectedPkg.name} Package
+            </h3>
+            <p className="mt-2 text-xs text-body leading-relaxed">
+              You are purchasing a 1-time anonymous dispatch packet for{' '}
+              <strong className="text-ink font-semibold">${selectedPkg.price} USD</strong> as{' '}
+              <strong className="text-ink font-semibold">{user?.email}</strong>.
+            </p>
+
+            <div className="mt-4 rounded-2xl border border-line bg-canvas p-4 text-xs space-y-2">
+              <div className="flex justify-between text-body">
+                <span>Tier</span>
+                <span className="font-semibold text-ink">{selectedPkg.name}</span>
+              </div>
+              <div className="flex justify-between text-body">
+                <span>Payment</span>
+                <span className="font-semibold text-ink">One-Time · No subscription</span>
+              </div>
+              <div className="flex justify-between text-body border-t border-line pt-2">
+                <span className="font-bold text-ink">Total Due</span>
+                <span className="font-bold text-brand text-sm">${selectedPkg.price} USD</span>
+              </div>
+            </div>
+
+            <div className="mt-6 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setSelectedPkg(null)}
+                className="flex-1 rounded-xl border border-line py-2.5 text-xs font-semibold text-body hover:text-ink"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  toast.success(`Thank you! Your ${selectedPkg.name} package is ready for dispatch.`);
+                  setSelectedPkg(null);
+                  router.push('/#send-message-section');
+                }}
+                className="flex-1 rounded-xl bg-brand py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-brand-strong"
+              >
+                Complete Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -1,1 +1,11 @@
-{"version":4,"routes":{"/resources/anxiety-and-panic":{},"/resources/depression":{},"/resources/burnout-and-stress":{},"/resources/trauma-and-ptsd":{},"/resources/grief-and-loss":{},"/resources/sleep-and-insomnia":{},"/resources/loneliness":{},"/resources/ocd":{},"/resources/substance-use":{}},"dynamicRoutes":{"/resources/[id]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/resources/[id]","routeRegex":"^\\/resources\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"ab694195fd442e53852a695b339c1c5c","previewModeSigningKey":"06aa6276ef7bfc894d90a620f468d9e62dbd7c35fb7131d404d3adfc62028b70","previewModeEncryptionKey":"e93b7481500ca79579c37b85fc1a883860236092019a3b86a7b8804b1171f6f1"}}
+{
+  "version": 4,
+  "routes": {},
+  "dynamicRoutes": {},
+  "notFoundRoutes": [],
+  "preview": {
+    "previewModeId": "9c01b4b6d4166bebd4ee8b9bd87bdf01",
+    "previewModeSigningKey": "65f8aebbc7dc0b0fdfcc3f32527fbfa23b5602095591796bb537b892a25f320c",
+    "previewModeEncryptionKey": "a8a4cf0508718fcd3bc2a0025a09c0b42087ce6c0a5cba03e382bf6b2d301ce7"
+  }
+}

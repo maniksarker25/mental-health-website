@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import {
@@ -17,6 +19,7 @@ import {
   EyeIcon,
   ChevronDownIcon,
   ChevronUpIcon,
+  LogInIcon,
 } from 'lucide-react';
 import {
   CommunityPost,
@@ -24,6 +27,7 @@ import {
   seedCommunityPosts,
 } from '../../data/community';
 import { CrisisBanner } from '../../components/CrisisBanner';
+import { useAuth } from '../../contexts/AuthContext';
 import { cn } from '../../utils/cn';
 
 const anonymousAliases = [
@@ -37,15 +41,21 @@ const anonymousAliases = [
 ];
 
 export default function CommunityPage() {
+  const router = useRouter();
+  const { user, isAuthenticated } = useAuth();
+
   const [posts, setPosts] = useState<CommunityPost[]>(seedCommunityPosts);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Form modal state
   const [showPostModal, setShowPostModal] = useState(false);
+  const [showLoginPromptModal, setShowLoginPromptModal] = useState(false);
+  const [loginPromptReason, setLoginPromptReason] = useState('post a question');
+
   const [postTitle, setPostTitle] = useState('');
   const [postContent, setPostContent] = useState('');
   const [postTag, setPostTag] = useState('Question');
-  const [postAuthor, setPostAuthor] = useState(anonymousAliases[0]);
+  const [postAuthor, setPostAuthor] = useState(user?.name || anonymousAliases[0]);
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -63,6 +73,12 @@ export default function CommunityPage() {
   const [activeZoomImage, setActiveZoomImage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (user?.name) {
+      setPostAuthor(user.name);
+    }
+  }, [user]);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -111,8 +127,23 @@ export default function CommunityPage() {
     reader.readAsDataURL(file);
   };
 
+  const handleOpenPostModal = () => {
+    if (!isAuthenticated) {
+      setLoginPromptReason('ask a question or publish a post');
+      setShowLoginPromptModal(true);
+      return;
+    }
+    setShowPostModal(true);
+  };
+
   const handleCreatePost = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      setLoginPromptReason('post a question');
+      setShowLoginPromptModal(true);
+      return;
+    }
+
     if (!postTitle.trim()) {
       toast.error('Please enter a question or title for your post.');
       return;
@@ -127,7 +158,7 @@ export default function CommunityPage() {
     setTimeout(() => {
       const newPost: CommunityPost = {
         id: `post-${Date.now()}`,
-        author: postAuthor,
+        author: postAuthor || user?.name || 'Community Member',
         authorRole: 'Community Member',
         title: postTitle.trim(),
         content: postContent.trim(),
@@ -178,6 +209,12 @@ export default function CommunityPage() {
   };
 
   const handleAddReply = (postId: string) => {
+    if (!isAuthenticated) {
+      setLoginPromptReason('share a suggestion or reply');
+      setShowLoginPromptModal(true);
+      return;
+    }
+
     const text = replyInputs[postId]?.trim();
     if (!text) {
       toast.error('Please type a supportive suggestion or reply before sending.');
@@ -186,7 +223,7 @@ export default function CommunityPage() {
 
     const newReply: CommunityReply = {
       id: `reply-${Date.now()}`,
-      author: postAuthor,
+      author: user?.name || postAuthor || 'Community Member',
       content: text,
       createdAt: 'Just now',
       likes: 0,
@@ -240,10 +277,10 @@ export default function CommunityPage() {
               </p>
             </div>
 
-            <div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <button
                 type="button"
-                onClick={() => setShowPostModal(true)}
+                onClick={handleOpenPostModal}
                 className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-medium text-white shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 <MessageSquarePlusIcon className="h-4 w-4" />
@@ -430,7 +467,11 @@ export default function CommunityPage() {
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') handleAddReply(post.id);
                           }}
-                          placeholder="Write a supportive suggestion or answer…"
+                          placeholder={
+                            isAuthenticated
+                              ? 'Write a supportive suggestion or answer…'
+                              : 'Sign in to write a suggestion or answer…'
+                          }
                           className="flex-1 rounded-xl border border-line bg-surface px-4 py-2.5 text-xs text-ink placeholder:text-body focus:border-brand focus:outline-none"
                         />
                         <button
@@ -473,6 +514,51 @@ export default function CommunityPage() {
         </div>
       </main>
 
+      {/* Login Prompt Modal (When user tries to post/reply without sign in) */}
+      <AnimatePresence>
+        {showLoginPromptModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="relative w-full max-w-md rounded-3xl border border-line bg-surface p-6 sm:p-8 shadow-2xl text-center"
+            >
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand text-white mb-4">
+                <LogInIcon className="h-6 w-6" />
+              </div>
+              <h2 className="font-serif text-2xl font-bold text-ink">Sign In Required</h2>
+              <p className="mt-2 text-xs text-body leading-relaxed">
+                Please sign in or create an account to {loginPromptReason}. This ensures our community remains a safe, respectful environment.
+              </p>
+
+              <div className="mt-6 flex flex-col gap-2.5">
+                <Link
+                  href={`/login?redirect=${encodeURIComponent('/community')}`}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3 text-xs font-semibold text-white shadow-xs hover:bg-brand-strong"
+                >
+                  <LogInIcon className="h-4 w-4" />
+                  Sign In to Continue
+                </Link>
+                <Link
+                  href={`/register?redirect=${encodeURIComponent('/community')}`}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-line bg-canvas py-3 text-xs font-semibold text-ink hover:border-brand"
+                >
+                  Create an Account
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setShowLoginPromptModal(false)}
+                  className="mt-1 text-xs text-subtle hover:text-ink"
+                >
+                  Maybe later
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       {/* Create Post Modal */}
       <AnimatePresence>
         {showPostModal && (
@@ -489,7 +575,8 @@ export default function CommunityPage() {
                 <div>
                   <h2 className="font-serif text-2xl font-bold text-ink">Ask a Question or Post</h2>
                   <p className="text-xs text-body mt-0.5">
-                    Share your experience or ask the community for suggestions.
+                    Share your experience or ask the community for suggestions as{' '}
+                    <strong className="text-ink font-semibold">{user?.name || postAuthor}</strong>.
                   </p>
                 </div>
                 <button
@@ -587,13 +674,27 @@ export default function CommunityPage() {
                   )}
                 </div>
 
-                {/* Alias Selection */}
+                {/* Author Name Selection */}
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-ink">
-                    Display Alias (100% Anonymous)
+                    Display Author Name
                   </label>
                   <div className="mt-1.5 flex flex-wrap gap-2">
-                    {anonymousAliases.map((alias) => (
+                    {user?.name && (
+                      <button
+                        type="button"
+                        onClick={() => setPostAuthor(user.name)}
+                        className={cn(
+                          'rounded-full border px-3 py-1 text-xs transition-colors',
+                          postAuthor === user.name
+                            ? 'border-brand bg-brand text-white font-medium'
+                            : 'border-line bg-canvas text-body hover:border-brand'
+                        )}
+                      >
+                        {user.name} (My Profile)
+                      </button>
+                    )}
+                    {anonymousAliases.slice(0, 4).map((alias) => (
                       <button
                         key={alias}
                         type="button"

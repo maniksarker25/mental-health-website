@@ -3,17 +3,17 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRightIcon, EyeOffIcon, ShieldCheckIcon, StethoscopeIcon, PlayIcon, SparklesIcon } from 'lucide-react';
+import { ArrowRightIcon, EyeOffIcon, ShieldCheckIcon, HeartHandshakeIcon, PlayIcon, SparklesIcon, UsersIcon } from 'lucide-react';
 
 const trustPills = [
   { label: '100% Confidential', icon: ShieldCheckIcon },
   { label: 'Zero Data Retained', icon: EyeOffIcon },
-  { label: 'Clinically Vetted', icon: StethoscopeIcon },
+  { label: 'Clinically Vetted', icon: HeartHandshakeIcon },
 ];
 
 export function HomeHero() {
   return (
-    <section className="relative overflow-hidden border-b border-line bg-surface">
+    <section className="relative overflow-hidden border-b border-line bg-canvas">
       <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:py-24 lg:px-8">
         <div className="lg:col-span-7">
           <motion.div
@@ -22,7 +22,7 @@ export function HomeHero() {
             transition={{ duration: 0.28, ease: [0.23, 1, 0.32, 1] }}
             className="inline-flex items-center gap-2 rounded-full border border-line bg-canvas px-3.5 py-1.5 text-xs font-medium text-brand"
           >
-            <SparklesIcon className="h-3.5 w-3.5" />
+            <UsersIcon className="h-3.5 w-3.5" />
             <span>Anonymous Mental Health Resource Dispatch</span>
           </motion.div>
 
@@ -30,9 +30,12 @@ export function HomeHero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.04, ease: [0.23, 1, 0.32, 1] }}
-            className="mt-4 max-w-3xl font-serif text-4xl leading-[1.1] text-ink sm:text-5xl lg:text-6xl"
+            className="mt-4 max-w-3xl font-serif text-4xl leading-[1.15] text-ink sm:text-5xl lg:text-6xl"
           >
-            When starting the conversation feels heavy, send support first.
+            When starting the
+            conversation feels
+            heavy, send support
+            first.
           </motion.h1>
 
           <motion.p
@@ -41,9 +44,7 @@ export function HomeHero() {
             transition={{ duration: 0.3, delay: 0.08, ease: [0.23, 1, 0.32, 1] }}
             className="mt-6 max-w-xl text-base leading-relaxed text-body sm:text-lg"
           >
-            Choose a clinically reviewed guide and dispatch it anonymously by text or email. No sender name, zero accounts
-            for the recipient, and nothing stored on our servers — just a calm, shame-free explanation waiting whenever they
-            are ready.
+           Choose a clinically reviewed guide and dispatch it anonymously by text or email. No sender name, zero accounts for the recipient, and nothing stored on our servers - just a calm, shame-free explanation waiting whenever they are ready.
           </motion.p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -91,14 +92,14 @@ export function HomeHero() {
           <figure className="relative h-full">
             <img
               src="/6f1a0d9f-8579-46cc-ac9d-c99dc170b4df.jpg"
-              alt="Calm morning light reflecting through water"
+              alt="Gentle light shining through water"
               className="h-64 w-full rounded-3xl object-cover sm:h-80 lg:h-full shadow-md"
             />
             <figcaption className="absolute bottom-4 left-4 right-4 rounded-2xl border border-line bg-surface/95 p-4 backdrop-blur-md">
               <p className="font-serif text-base leading-snug text-ink sm:text-lg">
-                “I couldn’t find the right words to say out loud. I sent the anxiety guide, and three days later she brought it up herself.”
+                “I noticed my friend was struggling with deep anxiety, but I didn’t know how to speak to him without making him defensive. I sent the anxiety toolkit anonymously, and it gave him a safe way to understand what he was feeling.”
               </p>
-              <p className="mt-2 text-xs text-body">Anonymous supporter feedback</p>
+              <p className="mt-2 text-xs text-body">Anonymous supporter experience</p>
             </figcaption>
           </figure>
         </div>

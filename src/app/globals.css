@@ -5,10 +5,10 @@
 @tailwind utilities;
 
 :root {
-  --brand: #2e5e52;
+  --brand: #2F6B4F;
   --brand-strong: #24483f;
   --brand-tint: #ebf0ec;
-  --canvas: #f5f6f2;
+  --canvas: #F4F2ECD9;
   --surface: #ffffff;
   --surface-sunken: #f0f2ed;
   --ink: #18231f;

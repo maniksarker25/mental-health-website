@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { SearchIcon, XIcon, BookOpenIcon, ClockIcon, ArrowRightIcon, SparklesIcon } from 'lucide-react';
+import { SearchIcon, XIcon, HeartHandshakeIcon, ClockIcon, ArrowRightIcon, UsersIcon } from 'lucide-react';
 import { categories, topics } from '../../data/topics';
 import { searchTopics } from '../../utils/article';
 import { cn } from '../../utils/cn';
@@ -20,16 +20,15 @@ export default function ResourcesPage() {
       <section className="border-b border-line bg-surface">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
           <div className="inline-flex items-center gap-2 rounded-full border border-line bg-canvas px-3.5 py-1.5 text-xs font-medium text-brand">
-            <BookOpenIcon className="h-3.5 w-3.5" />
-            <span>Mental Health Library</span>
+            <HeartHandshakeIcon className="h-3.5 w-3.5" />
+            <span>Support Resource Packets</span>
           </div>
 
           <h1 className="mt-3 max-w-3xl font-serif text-4xl leading-tight text-ink sm:text-5xl">
-            Clinically reviewed resources written in plain language.
+            Clinically vetted guides you can send to someone you care about.
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-body">
-            Simple, text-based educational guides designed to be calm, grounded, and free of clinical jargon.
-            Search by title or symptom description, or filter by topic below.
+            When a friend, relative, or loved one is experiencing anxiety, depression, burnout, or grief and talking directly feels heavy, explore these quiet, shame-free educational guides to send anonymous support.
           </p>
 
           {/* Search Box */}
@@ -44,7 +43,7 @@ export default function ResourcesPage() {
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search by title, symptom, or keyword (e.g. “panic attack”, “burnout”, “grief”)…"
+                placeholder="Search by title, challenge, or keyword (e.g. “panic attack”, “burnout”, “grief”)…"
                 className="w-full rounded-full border border-line bg-canvas py-3.5 pl-11 pr-11 text-sm text-ink placeholder:text-body transition-colors duration-150 ease-gentle focus:border-brand focus:outline-none shadow-xs"
               />
               {query && (
@@ -86,7 +85,7 @@ export default function ResourcesPage() {
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div className="flex items-center justify-between">
           <p aria-live="polite" className="text-sm font-medium text-body">
-            Showing {results.length} {results.length === 1 ? 'resource' : 'resources'}
+            Showing {results.length} {results.length === 1 ? 'resource packet' : 'resource packets'}
             {category !== 'All Topics' && ` in “${category}”`}
             {query && ` matching “${query}”`}
           </p>
@@ -157,7 +156,7 @@ export default function ResourcesPage() {
                         href={`/resources/${topic.id}`}
                         className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand transition-colors hover:text-ink"
                       >
-                        Read resource
+                        Read resource packet
                         <ArrowRightIcon className="h-3.5 w-3.5" />
                       </Link>
                     </div>
@@ -180,7 +179,7 @@ export default function ResourcesPage() {
               }}
               className="mt-6 inline-flex items-center rounded-full bg-brand px-6 py-2.5 text-sm font-medium text-white transition-transform duration-150 ease-gentle hover:scale-[1.02]"
             >
-              Show all resources
+              Show all resource packets
             </button>
           </div>
         )}
