@@ -56,7 +56,7 @@ export function Footer() {
           <div className="lg:col-span-4">
             <Image
               src="/logo.png"
-              alt="Mental Health Support"
+              alt="Mental Health Anonymous"
               width={1800}
               height={400}
               className="h-9 w-auto object-contain"
@@ -127,7 +127,7 @@ export function Footer() {
 
           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-body">
-              © {new Date().getFullYear()} Mental Health Support. Educational resources only — not a substitute for
+              © {new Date().getFullYear()} Mental Health Anonymous. Educational resources only — not a substitute for
               professional care.
             </p>
             <div className="flex items-center gap-5 text-xs text-body">

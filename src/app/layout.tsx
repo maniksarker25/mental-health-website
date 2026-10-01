@@ -7,8 +7,8 @@ import { Footer } from '../components/Footer';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://mentalhealthsupport.app'),
-  title: 'Mental Health Support — Anonymous Resource Dispatch',
+  metadataBase: new URL('https://mentalhealthanonymous.app'),
+  title: 'Mental Health Anonymous — Anonymous Resource Dispatch',
   description:
     'Choose a clinically reviewed mental health guide and dispatch it anonymously via SMS or email with zero tracking, zero accounts, and complete privacy.',
   keywords: [
@@ -21,18 +21,18 @@ export const metadata: Metadata = {
     'grounding tools',
     'crisis resources',
   ],
-  authors: [{ name: 'Mental Health Support Clinical Team' }],
+  authors: [{ name: 'Mental Health Anonymous Clinical Team' }],
   openGraph: {
-    title: 'Mental Health Support — Anonymous Resource Dispatch',
+    title: 'Mental Health Anonymous — Anonymous Resource Dispatch',
     description:
       'Send a calm, shame-free educational guide to someone who needs it. Zero retention, no accounts, 100% confidential.',
     type: 'website',
     locale: 'en_US',
-    siteName: 'Mental Health Support',
+    siteName: 'Mental Health Anonymous',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mental Health Support — Anonymous Resource Dispatch',
+    title: 'Mental Health Anonymous — Anonymous Resource Dispatch',
     description:
       'Send a calm, shame-free educational guide to someone who needs it. Zero retention, no accounts, 100% confidential.',
   },

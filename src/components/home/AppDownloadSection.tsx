@@ -224,7 +224,7 @@ export function AppDownloadSection() {
                     handleStoreClick('App Store');
                   }}
                   className="group flex h-[52px] items-center gap-3 rounded-2xl bg-[#111815] px-5 text-white shadow-sm transition-all duration-150 ease-gentle hover:scale-[1.02] hover:bg-[#1a2521] active:scale-[0.98] dark:bg-[#eef2ee] dark:text-[#121816] dark:hover:bg-white"
-                  aria-label="Download Mental Health Support App on the Apple App Store"
+                  aria-label="Download Mental Health Anonymous App on the Apple App Store"
                 >
                   <svg
                     className="h-6 w-6 fill-current transition-transform duration-150 group-hover:scale-105"
@@ -250,7 +250,7 @@ export function AppDownloadSection() {
                     handleStoreClick('Google Play');
                   }}
                   className="group flex h-[52px] items-center gap-3 rounded-2xl bg-[#111815] px-5 text-white shadow-sm transition-all duration-150 ease-gentle hover:scale-[1.02] hover:bg-[#1a2521] active:scale-[0.98] dark:bg-[#eef2ee] dark:text-[#121816] dark:hover:bg-white"
-                  aria-label="Get Mental Health Support App on Google Play"
+                  aria-label="Get Mental Health Anonymous App on Google Play"
                 >
                   <svg
                     className="h-6 w-6 fill-current transition-transform duration-150 group-hover:scale-105"

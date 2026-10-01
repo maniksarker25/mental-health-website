@@ -58,7 +58,7 @@ function RegisterFormContent() {
     try {
       const res = await register(name.trim(), email.trim(), password);
       if (res.ok) {
-        toast.success('Account created successfully! Welcome to Mention Mental Health.');
+        toast.success('Account created successfully! Welcome to Mental Health Anonymous.');
         router.push(redirectUrl);
       } else {
         toast.error(res.error || 'Failed to create account.');
