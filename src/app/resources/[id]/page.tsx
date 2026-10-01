@@ -28,12 +28,12 @@ export async function generateMetadata({ params }: ResourcePageProps): Promise<M
 
   if (!topic) {
     return {
-      title: 'Resource Not Found — Mental Health Support',
+      title: 'Resource Not Found — Mental Health Anonymous',
     };
   }
 
   return {
-    title: `${topic.title} — Mental Health Support`,
+    title: `${topic.title} — Mental Health Anonymous`,
     description: topic.excerpt,
     keywords: topic.keywords,
   };

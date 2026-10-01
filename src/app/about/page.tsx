@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { ArrowRightIcon, HeartHandshakeIcon, SparklesIcon, ShieldCheckIcon } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'About Us — Mental Health Support',
+  title: 'About Us — Mental Health Anonymous',
   description:
     'Demystifying mental health support through zero-barrier, shame-free communication and clinically reviewed guides.',
 };

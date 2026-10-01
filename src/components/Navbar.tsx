@@ -42,10 +42,10 @@ export function Navbar() {
   return (
     <header className="no-print sticky top-0 z-50 border-b border-line bg-canvas">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex shrink-0 items-center" aria-label="Mental Health Support home">
+        <Link href="/" className="flex shrink-0 items-center" aria-label="Mental Health Anonymous home">
           <Image
             src="/logo.png"
-            alt="Mental Health Support"
+            alt="Mental Health Anonymous"
             width={1800}
             height={400}
             priority
