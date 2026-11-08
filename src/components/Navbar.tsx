@@ -33,10 +33,14 @@ export function Navbar() {
     setOpen(false);
   }, [pathname]);
 
-  const handleLogout = () => {
-    logout();
-    toast.success('Signed out successfully.');
-    router.push('/');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.success('Signed out successfully.');
+      router.push('/');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Unable to sign out.');
+    }
   };
 
   return (

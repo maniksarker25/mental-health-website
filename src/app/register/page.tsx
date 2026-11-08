@@ -13,7 +13,6 @@ import {
   EyeIcon,
   EyeOffIcon,
   HeartIcon,
-  CheckCircle2Icon,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -22,7 +21,7 @@ function RegisterFormContent() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/community';
 
-  const { register } = useAuth();
+  const { register, verifyRegistration, resendRegistrationCode } = useAuth();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -31,6 +30,8 @@ function RegisterFormContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [agreed, setAgreed] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [verificationPending, setVerificationPending] = useState(false);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,15 +57,50 @@ function RegisterFormContent() {
 
     setIsSubmitting(true);
     try {
-      const res = await register(name.trim(), email.trim(), password);
+      const res = await register(name.trim(), email.trim(), password, confirmPassword);
       if (res.ok) {
-        toast.success('Account created successfully! Welcome to Mental Health Anonymous.');
-        router.push(redirectUrl);
+        setVerificationPending(true);
+        toast.success('A verification code has been sent to your email.');
       } else {
         toast.error(res.error || 'Failed to create account.');
       }
     } catch {
       toast.error('An unexpected error occurred during registration.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleVerifyRegistration = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!/^\d{6}$/.test(verificationCode)) {
+      toast.error('Enter the six-digit verification code from your email.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await verifyRegistration(email, verificationCode);
+      if (res.ok) {
+        toast.success('Email verified. Welcome to Mental Health Anonymous!');
+        router.push(redirectUrl);
+      } else {
+        toast.error(res.error || 'Unable to verify your email.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleResendCode = async () => {
+    setIsSubmitting(true);
+    try {
+      const res = await resendRegistrationCode(email);
+      if (res.ok) {
+        toast.success('A new verification code has been sent.');
+      } else {
+        toast.error(res.error || 'Unable to resend the verification code.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -87,6 +123,52 @@ function RegisterFormContent() {
 
       {/* Main Card */}
       <div className="mt-8 rounded-3xl border border-line bg-surface p-6 sm:p-8 shadow-xs">
+        {verificationPending ? (
+          <form onSubmit={handleVerifyRegistration} className="space-y-4">
+            <div>
+              <h2 className="text-lg font-semibold text-ink">Verify your email</h2>
+              <p className="mt-1 text-sm text-body">
+                Enter the six-digit code sent to <strong>{email}</strong>.
+              </p>
+            </div>
+            <div>
+              <label
+                htmlFor="verification-code"
+                className="block text-xs font-semibold uppercase tracking-wider text-ink"
+              >
+                Verification code
+              </label>
+              <input
+                id="verification-code"
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                pattern="[0-9]{6}"
+                maxLength={6}
+                required
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ''))}
+                className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-3.5 py-2.5 text-center text-lg tracking-[0.4em] text-ink outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {isSubmitting ? 'Verifying…' : 'Verify email'}
+              <ArrowRightIcon className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={handleResendCode}
+              disabled={isSubmitting}
+              className="w-full text-center text-xs font-semibold text-brand hover:underline disabled:opacity-60"
+            >
+              Resend verification code
+            </button>
+          </form>
+        ) : (
         <form onSubmit={handleRegister} className="space-y-4">
           {/* Full Name */}
           <div>
@@ -199,9 +281,10 @@ function RegisterFormContent() {
             <ArrowRightIcon className="h-4 w-4" />
           </button>
         </form>
+        )}
 
         {/* Login Link */}
-        <p className="mt-6 text-center text-xs text-body">
+        {!verificationPending && <p className="mt-6 text-center text-xs text-body">
           Already have an account?{' '}
           <Link
             href={`/login?redirect=${encodeURIComponent(redirectUrl)}`}
@@ -209,7 +292,7 @@ function RegisterFormContent() {
           >
             Sign in here
           </Link>
-        </p>
+        </p>}
       </div>
 
       {/* Safety & Privacy Footnote */}

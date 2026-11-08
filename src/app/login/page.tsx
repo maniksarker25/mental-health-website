@@ -12,7 +12,6 @@ import {
   EyeIcon,
   EyeOffIcon,
   HeartHandshakeIcon,
-  SparklesIcon,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -21,7 +20,7 @@ function LoginFormContent() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirect') || '/community';
 
-  const { login } = useAuth();
+  const { login, isLoading } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,7 +37,7 @@ function LoginFormContent() {
 
     setIsSubmitting(true);
     try {
-      const res = await login(email, password);
+      const res = await login(email, password, rememberMe);
       if (res.ok) {
         toast.success('Signed in successfully! Welcome back.');
         router.push(redirectUrl);
@@ -49,18 +48,6 @@ function LoginFormContent() {
       toast.error('An unexpected error occurred.');
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleDemoLogin = async () => {
-    setEmail('sarah.walker@example.com');
-    setPassword('Compassion2026!');
-    setIsSubmitting(true);
-    const res = await login('sarah.walker@example.com', 'Compassion2026!');
-    setIsSubmitting(false);
-    if (res.ok) {
-      toast.success('Signed in with quick demo account!');
-      router.push(redirectUrl);
     }
   };
 
@@ -106,15 +93,9 @@ function LoginFormContent() {
               <label className="block text-xs font-semibold uppercase tracking-wider text-ink">
                 Password
               </label>
-              <button
-                type="button"
-                onClick={() =>
-                  toast.info('Password reset instructions will be sent to your email.')
-                }
-                className="text-xs font-medium text-brand hover:underline"
-              >
+              <Link href="/forgot-password" className="text-xs font-medium text-brand hover:underline">
                 Forgot password?
-              </button>
+              </Link>
             </div>
             <div className="relative mt-1.5">
               <input
@@ -152,33 +133,13 @@ function LoginFormContent() {
           {/* Submit */}
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLoading}
             className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60"
           >
             {isSubmitting ? 'Signing in…' : 'Sign In'}
             <ArrowRightIcon className="h-4 w-4" />
           </button>
         </form>
-
-        {/* Divider */}
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-line" />
-          </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="bg-surface px-2 text-subtle">Or continue with</span>
-          </div>
-        </div>
-
-        {/* Quick Demo Login */}
-        <button
-          type="button"
-          onClick={handleDemoLogin}
-          className="flex w-full items-center justify-center gap-2 rounded-xl border border-line bg-canvas py-2.5 text-xs font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
-        >
-          <SparklesIcon className="h-3.5 w-3.5 text-brand" />
-          One-Click Demo Sign In
-        </button>
 
         {/* Register Link */}
         <p className="mt-6 text-center text-xs text-body">

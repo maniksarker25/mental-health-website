@@ -3,106 +3,221 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import type { WebUser } from '../types/auth';
 
+interface AuthResult {
+  ok: boolean;
+  error?: string;
+}
+
 interface AuthContextType {
   user: WebUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<{ ok: boolean; error?: string }>;
-  register: (name: string, email: string, password: string) => Promise<{ ok: boolean; error?: string }>;
-  logout: () => void;
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<AuthResult>;
+  register: (
+    name: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+  ) => Promise<AuthResult>;
+  verifyRegistration: (email: string, code: string) => Promise<AuthResult>;
+  resendRegistrationCode: (email: string) => Promise<AuthResult>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'mention_health_web_user';
+function isWebUser(value: unknown): value is WebUser {
+  if (typeof value !== 'object' || value === null) return false;
+  return (
+    'id' in value &&
+    typeof value.id === 'string' &&
+    'name' in value &&
+    typeof value.name === 'string' &&
+    'email' in value &&
+    typeof value.email === 'string' &&
+    'initials' in value &&
+    typeof value.initials === 'string' &&
+    'createdAt' in value &&
+    typeof value.createdAt === 'string'
+  );
+}
+
+async function postAuthRequest(
+  path: string,
+  payload?: Record<string, unknown>
+): Promise<{ response: Response; body: unknown }> {
+  const response = await fetch(`/api/auth/${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin',
+    ...(payload ? { body: JSON.stringify(payload) } : {}),
+  });
+  let body: unknown;
+  try {
+    body = await response.json();
+  } catch {
+    throw new Error('The server returned an invalid response.');
+  }
+  return { response, body };
+}
+
+function getErrorMessage(body: unknown): string {
+  if (
+    typeof body === 'object' &&
+    body !== null &&
+    'error' in body &&
+    typeof body.error === 'string'
+  ) {
+    return body.error;
+  }
+  return 'The request could not be completed. Please try again.';
+}
+
+function getResponseUser(body: unknown): WebUser {
+  if (
+    typeof body !== 'object' ||
+    body === null ||
+    !('user' in body) ||
+    !isWebUser(body.user)
+  ) {
+    throw new Error('The server did not return a valid user profile.');
+  }
+  return body.user;
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<WebUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Restore session from localStorage
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        setUser(JSON.parse(stored));
-      }
-    } catch {
-      // ignore
-    } finally {
-      setIsLoading(false);
-    }
+    let active = true;
+    fetch('/api/auth/session', {
+      credentials: 'same-origin',
+      cache: 'no-store',
+    })
+      .then(async (response) => {
+        const body: unknown = await response.json();
+        if (!response.ok) throw new Error(getErrorMessage(body));
+        if (
+          typeof body !== 'object' ||
+          body === null ||
+          !('user' in body) ||
+          (body.user !== null && !isWebUser(body.user))
+        ) {
+          throw new Error('The server returned an invalid session.');
+        }
+        if (active) setUser(body.user);
+      })
+      .catch((error: unknown) => {
+        if (active) {
+          setUser(null);
+          console.error('Unable to restore the authentication session:', error);
+        }
+      })
+      .finally(() => {
+        if (active) setIsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    if (!email || !password) {
+  const login = useCallback(async (
+    email: string,
+    password: string,
+    rememberMe = false
+  ): Promise<AuthResult> => {
+    if (!email.trim() || !password) {
       return { ok: false, error: 'Please provide both email and password.' };
     }
 
-    // Generate user initials and name from email or stored profile
-    const namePart = email.split('@')[0] || 'Member';
-    const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-    const initials = formattedName.slice(0, 2).toUpperCase();
-
-    const loggedUser: WebUser = {
-      id: `usr-${Date.now()}`,
-      name: formattedName,
-      email: email.trim().toLowerCase(),
-      initials,
-      createdAt: new Date().toISOString(),
-    };
-
-    setUser(loggedUser);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(loggedUser));
-    } catch {
-      // ignore
+      const { response, body } = await postAuthRequest('login', {
+        email: email.trim(),
+        password,
+        rememberMe,
+      });
+      if (!response.ok) return { ok: false, error: getErrorMessage(body) };
+      setUser(getResponseUser(body));
+      return { ok: true };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error instanceof Error ? error.message : 'Unable to sign in.',
+      };
     }
-
-    return { ok: true };
   }, []);
 
-  const register = useCallback(async (name: string, email: string, password: string) => {
-    if (!name || !email || !password) {
-      return { ok: false, error: 'All fields are required.' };
-    }
-
-    if (password.length < 6) {
-      return { ok: false, error: 'Password must be at least 6 characters long.' };
-    }
-
-    const initials = name
-      .split(' ')
-      .filter(Boolean)
-      .map((p) => p[0]?.toUpperCase() ?? '')
-      .slice(0, 2)
-      .join('') || 'U';
-
-    const newUser: WebUser = {
-      id: `usr-${Date.now()}`,
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      initials,
-      createdAt: new Date().toISOString(),
-    };
-
-    setUser(newUser);
+  const register = useCallback(async (
+    name: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+  ): Promise<AuthResult> => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
-    } catch {
-      // ignore
+      const { response, body } = await postAuthRequest('register', {
+        name: name.trim(),
+        email: email.trim(),
+        password,
+        confirmPassword,
+      });
+      return response.ok
+        ? { ok: true }
+        : { ok: false, error: getErrorMessage(body) };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error instanceof Error ? error.message : 'Unable to register.',
+      };
     }
-
-    return { ok: true };
   }, []);
 
-  const logout = useCallback(() => {
+  const verifyRegistration = useCallback(async (
+    email: string,
+    code: string
+  ): Promise<AuthResult> => {
+    try {
+      const { response, body } = await postAuthRequest('verify-registration', {
+        email: email.trim(),
+        verifyCode: code,
+      });
+      if (!response.ok) return { ok: false, error: getErrorMessage(body) };
+      setUser(getResponseUser(body));
+      return { ok: true };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error instanceof Error ? error.message : 'Unable to verify your account.',
+      };
+    }
+  }, []);
+
+  const resendRegistrationCode = useCallback(async (email: string): Promise<AuthResult> => {
+    try {
+      const { response, body } = await postAuthRequest('resend-registration-code', {
+        email: email.trim(),
+      });
+      return response.ok
+        ? { ok: true }
+        : { ok: false, error: getErrorMessage(body) };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error instanceof Error ? error.message : 'Unable to resend the code.',
+      };
+    }
+  }, []);
+
+  const logout = useCallback(async () => {
+    const response = await fetch('/api/auth/logout', {
+      method: 'POST',
+      credentials: 'same-origin',
+    });
+    if (!response.ok) {
+      throw new Error('The server could not end the session.');
+    }
     setUser(null);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // ignore
-    }
   }, []);
 
   return (
@@ -113,6 +228,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         login,
         register,
+        verifyRegistration,
+        resendRegistrationCode,
         logout,
       }}
     >
@@ -124,7 +241,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth must be used within AuthProvider');
   }
   return context;
 }
