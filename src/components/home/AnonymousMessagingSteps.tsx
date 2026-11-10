@@ -6,24 +6,24 @@ import { CheckIcon, UsersIcon } from 'lucide-react';
 const steps = [
   {
     number: '01',
-    title: 'Choose a clinically vetted topic',
+    title: 'Choose a topic',
     description:
-      'Select a guide tailored to what they are facing - Anxiety & Panic, Burnout, Depression, Sleep, or Grief. Written in calm, accessible language without pathologizing.',
-    detail: '9 guides reviewed quarterly by licensed clinicians',
+      'Start with a topic that fits the kind of support you want to share.',
+    detail: 'Choose from the available mental health topics',
   },
   {
     number: '02',
-    title: 'Choose a clinically vetted topic',
+    title: 'Add recipient and delivery details',
     description:
-      'We generate an ephemeral, tracking-free link. No sender name is attached, no IP is stored, and no user profile is created. It is completely anonymous.',
-    detail: 'Zero retention guarantee - memory-only processing',
+      'Enter the recipient contact and choose email or SMS. You can review your choices before finishing.',
+    detail: 'Recipient details stay in the page preview',
   },
   {
     number: '03',
-    title: 'They read at their own pace',
+    title: 'Review the dispatch preview',
     description:
-      'The recipient opens a quiet, ad-free page featuring practical grounding tools, symptom mechanics, coping strategies, and verified crisis helplines.',
-    detail: 'No account required, no read receipts, no follow-up pressure',
+      'The website currently provides a guided preview only. Message delivery and payment are not connected yet.',
+    detail: 'Nothing is sent or saved when you finish',
   },
 ];
 
@@ -45,11 +45,10 @@ export function AnonymousMessagingSteps() {
               id="steps-heading"
               className="mt-4 font-serif text-3xl leading-tight text-ink sm:text-4xl lg:text-5xl"
             >
-              How anonymous messaging works
-              from start to finish.
+              Prepare a message, one step at a time.
             </h2>
             <p className="mt-4 text-base leading-relaxed text-body sm:text-lg">
-              When emotional distress makes direct conversations overwhelming, you can send help without putting anyone on the spot. Here are the three simple steps.
+              Choose a topic, enter recipient details, and review your delivery choice. Actual message delivery is not available yet.
             </p>
           </div>
         </div>

@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import {
   SmartphoneIcon,
   ShieldCheckIcon,
-  SendIcon,
   WindIcon,
   CloudIcon,
   FlameIcon,
@@ -22,7 +22,6 @@ import {
   ChevronRightIcon,
   QrCodeIcon,
   StarIcon,
-  CheckCircle2Icon,
   SparklesIcon,
   LockIcon
 } from 'lucide-react';
@@ -110,17 +109,15 @@ const appTopics: AppTopic[] = [
 ];
 
 export function AppDownloadSection() {
+  const router = useRouter();
   const [activeScreen, setActiveScreen] = useState<'topics' | 'review'>('topics');
   const [selectedTopic, setSelectedTopic] = useState<AppTopic>(appTopics[1]); // Default to Depression like in screenshot
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(true);
-  const [isSending, setIsSending] = useState(false);
-  const [sendSuccess, setSendSuccess] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
 
   const handleSelectTopic = (topic: AppTopic) => {
     setSelectedTopic(topic);
     setActiveScreen('review');
-    setSendSuccess(false);
   };
 
   const handleSendAnonymousMessage = () => {
@@ -128,17 +125,15 @@ export function AppDownloadSection() {
       toast.error('Please accept the educational disclaimer to proceed.');
       return;
     }
-    setIsSending(true);
-    setTimeout(() => {
-      setIsSending(false);
-      setSendSuccess(true);
-      toast.success(
-        `Anonymous support link for "${selectedTopic.title}" dispatched successfully! Zero data recorded.`
-      );
-      setTimeout(() => {
-        setSendSuccess(false);
-      }, 4000);
-    }, 900);
+    const topicIds: Record<string, string> = {
+      anxiety: 'anxiety-and-panic',
+      depression: 'depression',
+      'stress-burnout': 'burnout-and-stress',
+      'substance-abuse': 'substance-use',
+      'grief-loss': 'grief-and-loss',
+    };
+    const topicId = topicIds[selectedTopic.id];
+    router.push(topicId ? `/send-message?topic=${topicId}` : '/send-message');
   };
 
   const handleStoreClick = (storeName: string) => {
@@ -174,13 +169,12 @@ export function AppDownloadSection() {
               id="download-heading"
               className="mt-4 font-serif text-3xl leading-tight text-ink sm:text-4xl lg:text-5xl"
             >
-              Send anonymous support right from your phone.
+              Preview the message setup flow.
             </h2>
 
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-body">
-              When starting the conversation feels heavy, dispatch a clinically vetted resource directly
-              by SMS or email. No sender identity attached, zero accounts required for the recipient,
-              and nothing logged on our servers.
+              Explore the topic-selection screen, then continue to the website preview to choose a package,
+              enter recipient details, and review an email or SMS option. Delivery is not connected yet.
             </p>
 
             {/* Key feature points */}
@@ -190,9 +184,9 @@ export function AppDownloadSection() {
                   <ShieldCheckIcon className="h-3.5 w-3.5" />
                 </span>
                 <div>
-                  <h3 className="text-sm font-semibold text-ink">100% Anonymous Delivery</h3>
+                  <h3 className="text-sm font-semibold text-ink">Guided message setup</h3>
                   <p className="mt-1 text-xs leading-relaxed text-body">
-                    Your name, email, and phone number are never recorded or attached to the dispatch.
+                    The website preview does not send or save the recipient details you enter.
                   </p>
                 </div>
               </div>
@@ -418,7 +412,7 @@ export function AppDownloadSection() {
                         <div className="flex items-center pt-1">
                           <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 py-1 text-[10px] font-medium text-body">
                             <LockIcon className="h-3 w-3" />
-                            Anonymous
+                            Preview
                           </span>
                         </div>
 
@@ -426,7 +420,7 @@ export function AppDownloadSection() {
                           How can we help today?
                         </h3>
                         <p className="mt-1 text-[11px] leading-relaxed text-body">
-                          Pick a topic and we’ll send someone a private link to trusted educational resources.
+                          Pick a topic to preview the message setup.
                         </p>
 
                         {/* List Header */}
@@ -640,11 +634,11 @@ export function AppDownloadSection() {
                           </span>
                         </label>
 
-                        {/* Privacy & Zero-Retention Notice */}
+                        {/* Preview-only Notice */}
                         <div className="mt-2 flex items-start gap-2 rounded-2xl border border-[#cfdbd2] bg-[#ebf0ec] p-2.5 text-left dark:border-[#33443c] dark:bg-[#1a2420]">
                           <ShieldCheckIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand" />
                           <p className="text-[10px] leading-tight text-brand-strong dark:text-[#93c4b2]">
-                            Sent anonymously. Your name, email and number are never attached.
+                            Preview only. No message is sent or saved.
                           </p>
                         </div>
                       </div>
@@ -653,25 +647,10 @@ export function AppDownloadSection() {
                       <div className="mt-3">
                         <button
                           type="button"
-                          disabled={isSending || sendSuccess}
                           onClick={handleSendAnonymousMessage}
-                          className={cn(
-                            'w-full rounded-2xl py-3 text-xs font-semibold text-white shadow-sm transition-all duration-150 active:scale-[0.98]',
-                            sendSuccess
-                              ? 'bg-emerald-600'
-                              : 'bg-[#2e5e52] hover:bg-[#24483f]'
-                          )}
+                          className="w-full rounded-2xl bg-[#2e5e52] py-3 text-xs font-semibold text-white shadow-sm transition-all duration-150 hover:bg-[#24483f] active:scale-[0.98]"
                         >
-                          {isSending ? (
-                            'Dispatching anonymously…'
-                          ) : sendSuccess ? (
-                            <span className="inline-flex items-center gap-1.5">
-                              <CheckCircle2Icon className="h-3.5 w-3.5" />
-                              Dispatched Anonymously!
-                            </span>
-                          ) : (
-                            'Send anonymously'
-                          )}
+                          Continue to website preview
                         </button>
 
                         {/* iOS Home Indicator */}

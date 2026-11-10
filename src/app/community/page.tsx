@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import {
@@ -11,7 +10,6 @@ import {
   XIcon,
   HeartIcon,
   SendIcon,
-  ImageIcon,
   ShieldCheckIcon,
   UsersIcon,
   HelpCircleIcon,
@@ -24,28 +22,68 @@ import {
 import {
   CommunityPost,
   CommunityReply,
-  seedCommunityPosts,
+  communityCategories,
 } from '../../data/community';
 import { CrisisBanner } from '../../components/CrisisBanner';
 import { useAuth } from '../../contexts/AuthContext';
 import { cn } from '../../utils/cn';
+import {
+  CommunityApiPost,
+  CommunityApiReply,
+  formatCommunityDate,
+  getCommunityErrorMessage,
+  getCommunityAuthorName,
+} from '../../lib/community';
+import {
+  useCreateCommunityPostMutation,
+  useCreateCommunityReplyMutation,
+  useGetCommunityPostsQuery,
+  useLazyGetCommunityPostsQuery,
+  useLazyGetCommunityRepliesQuery,
+  useToggleCommunityPostLikeMutation,
+} from '../../redux/api/communityApi';
 
-const anonymousAliases = [
-  'Anonymous Willow',
-  'Gentle Breeze',
-  'Quiet Seeker',
-  'Mindful Journey',
-  'Hopeful Horizon',
-  'Calm Waters',
-  'Silent Oak',
-];
+function mapCommunityPost(post: CommunityApiPost): CommunityPost {
+  return {
+    id: post._id,
+    author: getCommunityAuthorName(post.author),
+    authorRole: 'Community Member',
+    title: post.title,
+    content: post.content,
+    category: post.category,
+    topicTag: post.category,
+    imageUrl: post.image || undefined,
+    createdAt: formatCommunityDate(post.createdAt),
+    likes: post.likesCount ?? 0,
+    replyCount: post.repliesCount ?? 0,
+    replies: [],
+    isPinned: post.isPinned,
+  };
+}
+
+function mapCommunityReply(reply: CommunityApiReply): CommunityReply {
+  return {
+    id: reply._id,
+    author: getCommunityAuthorName(reply.author),
+    content: reply.content,
+    createdAt: formatCommunityDate(reply.createdAt),
+    likes: 0,
+  };
+}
 
 export default function CommunityPage() {
-  const router = useRouter();
   const { user, isAuthenticated } = useAuth();
 
-  const [posts, setPosts] = useState<CommunityPost[]>(seedCommunityPosts);
+  const [posts, setPosts] = useState<CommunityPost[]>([]);
+  const [postPage, setPostPage] = useState(1);
+  const [hasMorePosts, setHasMorePosts] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const firstPageQuery = useGetCommunityPostsQuery({ page: 1, limit: 100 });
+  const [fetchPostsPage, { isFetching: isLoadingMorePosts }] = useLazyGetCommunityPostsQuery();
+  const [fetchReplies] = useLazyGetCommunityRepliesQuery();
+  const [createPost] = useCreateCommunityPostMutation();
+  const [toggleLike] = useToggleCommunityPostLikeMutation();
+  const [createReply] = useCreateCommunityReplyMutation();
 
   // Form modal state
   const [showPostModal, setShowPostModal] = useState(false);
@@ -54,16 +92,13 @@ export default function CommunityPage() {
 
   const [postTitle, setPostTitle] = useState('');
   const [postContent, setPostContent] = useState('');
-  const [postTag, setPostTag] = useState('Question');
-  const [postAuthor, setPostAuthor] = useState(user?.name || anonymousAliases[0]);
-  const [attachedImage, setAttachedImage] = useState<string | null>(null);
+  const [postCategory, setPostCategory] = useState('General Discussion');
+  const [postImage, setPostImage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Expanded replies state
-  const [expandedReplies, setExpandedReplies] = useState<Record<string, boolean>>({
-    'post-1': true,
-    'post-2': true,
-  });
+  const [expandedReplies, setExpandedReplies] = useState<Record<string, boolean>>({});
+  const [loadedReplies, setLoadedReplies] = useState<Record<string, boolean>>({});
 
   // New reply input per post
   const [replyInputs, setReplyInputs] = useState<Record<string, string>>({});
@@ -72,59 +107,25 @@ export default function CommunityPage() {
   // Image zoom modal
   const [activeZoomImage, setActiveZoomImage] = useState<string | null>(null);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
-    if (user?.name) {
-      setPostAuthor(user.name);
-    }
-  }, [user]);
+    const result = firstPageQuery.data;
+    if (!Array.isArray(result?.data)) return;
+    setPosts(result.data.map(mapCommunityPost));
+    setPostPage(1);
+    setHasMorePosts((result.meta?.totalPages ?? 1) > 1);
+  }, [firstPageQuery.data]);
 
-  // Load from localStorage on mount
-  useEffect(() => {
+  const loadNextPostsPage = async () => {
+    const nextPage = postPage + 1;
     try {
-      const saved = localStorage.getItem('mental_health_community_posts');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setPosts(parsed);
-        }
-      }
-    } catch (e) {
-      console.error('Error loading community posts from localStorage:', e);
+      const result = await fetchPostsPage({ page: nextPage, limit: 100 }).unwrap();
+      if (!Array.isArray(result.data)) throw new Error('The community feed response was invalid.');
+      setPosts((current) => [...current, ...result.data!.map(mapCommunityPost)]);
+      setPostPage(nextPage);
+      setHasMorePosts((result.meta?.totalPages ?? nextPage) > nextPage);
+    } catch (error) {
+      toast.error(getCommunityErrorMessage(error));
     }
-  }, []);
-
-  // Save to localStorage when posts change
-  const persistPosts = (updated: CommunityPost[]) => {
-    setPosts(updated);
-    try {
-      localStorage.setItem('mental_health_community_posts', JSON.stringify(updated));
-    } catch (e) {
-      console.error('Error saving community posts to localStorage:', e);
-    }
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please select a valid image file (PNG, JPG, WebP).');
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Image size should be less than 5MB.');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      setAttachedImage(reader.result as string);
-      toast.success('Image attached successfully.');
-    };
-    reader.readAsDataURL(file);
   };
 
   const handleOpenPostModal = () => {
@@ -136,7 +137,7 @@ export default function CommunityPage() {
     setShowPostModal(true);
   };
 
-  const handleCreatePost = (e: React.FormEvent) => {
+  const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isAuthenticated) {
       setLoginPromptReason('post a question');
@@ -154,61 +155,76 @@ export default function CommunityPage() {
     }
 
     setIsSubmitting(true);
-
-    setTimeout(() => {
-      const newPost: CommunityPost = {
-        id: `post-${Date.now()}`,
-        author: postAuthor || user?.name || 'Community Member',
-        authorRole: 'Community Member',
+    try {
+      await createPost({
         title: postTitle.trim(),
         content: postContent.trim(),
-        category: 'Community Question',
-        topicTag: postTag.trim() || 'Question',
-        imageUrl: attachedImage || undefined,
-        createdAt: 'Just now',
-        likes: 1,
-        replies: [],
-      };
-
-      const updated = [newPost, ...posts];
-      persistPosts(updated);
-
-      // Reset form
+        category: postCategory,
+        ...(postImage.trim() ? { image: postImage.trim() } : {}),
+      }).unwrap();
       setPostTitle('');
       setPostContent('');
-      setPostTag('Question');
-      setAttachedImage(null);
+      setPostCategory('General Discussion');
+      setPostImage('');
       setShowPostModal(false);
+      toast.success('Your post was submitted and is waiting for moderator review.');
+    } catch (error) {
+      toast.error(getCommunityErrorMessage(error));
+    } finally {
       setIsSubmitting(false);
-
-      toast.success('Your question has been posted to the community!');
-    }, 600);
+    }
   };
 
-  const handleLikePost = (postId: string) => {
-    const isLiked = likedPosts[postId];
-    setLikedPosts((prev) => ({ ...prev, [postId]: !isLiked }));
-
-    const updated = posts.map((p) => {
-      if (p.id === postId) {
-        return {
-          ...p,
-          likes: isLiked ? p.likes - 1 : p.likes + 1,
-        };
+  const handleLikePost = async (postId: string) => {
+    if (!isAuthenticated) {
+      setLoginPromptReason('mark a post as helpful');
+      setShowLoginPromptModal(true);
+      return;
+    }
+    const previousPost = posts.find((post) => post.id === postId);
+    if (!previousPost) return;
+    try {
+      const result = await toggleLike(postId).unwrap();
+      if (!result.data) throw new Error('The server did not return the updated post.');
+      const updatedPost = mapCommunityPost(result.data);
+      setPosts((current) =>
+        current.map((post) => (post.id === postId ? { ...post, likes: updatedPost.likes } : post))
+      );
+      if (updatedPost.likes !== previousPost.likes) {
+        setLikedPosts((current) => ({ ...current, [postId]: updatedPost.likes > previousPost.likes }));
       }
-      return p;
-    });
-    persistPosts(updated);
+    } catch (error) {
+      toast.error(getCommunityErrorMessage(error));
+    }
   };
 
-  const toggleReplies = (postId: string) => {
-    setExpandedReplies((prev) => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }));
+  const toggleReplies = async (postId: string) => {
+    const shouldExpand = !expandedReplies[postId];
+    setExpandedReplies((previous) => ({ ...previous, [postId]: shouldExpand }));
+    if (!shouldExpand || loadedReplies[postId]) return;
+
+    try {
+      const result = await fetchReplies({ postId, page: 1, limit: 100 }).unwrap();
+      if (!Array.isArray(result.data)) throw new Error('The community replies response was invalid.');
+      setPosts((current) =>
+        current.map((post) =>
+          post.id === postId
+            ? {
+                ...post,
+                replies: result.data!.map(mapCommunityReply),
+                replyCount: result.meta?.total ?? result.data!.length,
+              }
+            : post
+        )
+      );
+      setLoadedReplies((previous) => ({ ...previous, [postId]: true }));
+    } catch (error) {
+      setExpandedReplies((previous) => ({ ...previous, [postId]: false }));
+      toast.error(getCommunityErrorMessage(error));
+    }
   };
 
-  const handleAddReply = (postId: string) => {
+  const handleAddReply = async (postId: string) => {
     if (!isAuthenticated) {
       setLoginPromptReason('share a suggestion or reply');
       setShowLoginPromptModal(true);
@@ -221,28 +237,28 @@ export default function CommunityPage() {
       return;
     }
 
-    const newReply: CommunityReply = {
-      id: `reply-${Date.now()}`,
-      author: user?.name || postAuthor || 'Community Member',
-      content: text,
-      createdAt: 'Just now',
-      likes: 0,
-    };
-
-    const updated = posts.map((p) => {
-      if (p.id === postId) {
-        return {
-          ...p,
-          replies: [...p.replies, newReply],
-        };
-      }
-      return p;
-    });
-
-    persistPosts(updated);
-    setReplyInputs((prev) => ({ ...prev, [postId]: '' }));
-    setExpandedReplies((prev) => ({ ...prev, [postId]: true }));
-    toast.success('Your suggestion has been shared!');
+    try {
+      const result = await createReply({ postId, content: text }).unwrap();
+      if (!result.data) throw new Error('The server did not return the new reply.');
+      const newReply = mapCommunityReply(result.data);
+      setPosts((current) =>
+        current.map((post) =>
+          post.id === postId
+            ? {
+                ...post,
+                replies: [...post.replies, newReply],
+                replyCount: (post.replyCount ?? post.replies.length) + 1,
+              }
+            : post
+        )
+      );
+      setLoadedReplies((previous) => ({ ...previous, [postId]: true }));
+      setReplyInputs((previous) => ({ ...previous, [postId]: '' }));
+      setExpandedReplies((previous) => ({ ...previous, [postId]: true }));
+      toast.success('Your suggestion has been shared!');
+    } catch (error) {
+      toast.error(getCommunityErrorMessage(error));
+    }
   };
 
   // Search filter strictly across posts
@@ -328,8 +344,26 @@ export default function CommunityPage() {
 
         {/* Posts List */}
         <div className="space-y-6">
-          {filteredPosts.length > 0 ? (
-            filteredPosts.map((post) => {
+          {firstPageQuery.isLoading ? (
+            <div className="rounded-3xl border border-line bg-surface p-12 text-center text-sm text-body">
+              Loading community discussions…
+            </div>
+          ) : firstPageQuery.error ? (
+            <div className="rounded-3xl border border-line bg-surface p-12 text-center">
+              <p className="text-sm text-body">
+                {getCommunityErrorMessage(firstPageQuery.error)}
+              </p>
+              <button
+                type="button"
+                onClick={() => void firstPageQuery.refetch()}
+                className="mt-4 rounded-full bg-brand px-5 py-2 text-xs font-medium text-white"
+              >
+                Try again
+              </button>
+            </div>
+          ) : filteredPosts.length > 0 ? (
+            <>
+            {filteredPosts.map((post) => {
               const isExpanded = expandedReplies[post.id];
               const isLiked = likedPosts[post.id];
 
@@ -418,7 +452,7 @@ export default function CommunityPage() {
                         onClick={() => toggleReplies(post.id)}
                         className="flex items-center gap-1.5 rounded-full border border-line bg-canvas px-3.5 py-1.5 text-xs font-medium text-body transition-colors hover:border-brand hover:text-ink"
                       >
-                        <span>{post.replies.length} Suggestions</span>
+                        <span>{post.replyCount ?? post.replies.length} Suggestions</span>
                         {isExpanded ? (
                           <ChevronUpIcon className="h-3.5 w-3.5" />
                         ) : (
@@ -435,7 +469,9 @@ export default function CommunityPage() {
                         Community Suggestions & Answers
                       </p>
 
-                      {post.replies.length > 0 ? (
+                      {!loadedReplies[post.id] ? (
+                        <p className="text-xs text-body">Loading suggestions…</p>
+                      ) : post.replies.length > 0 ? (
                         <div className="space-y-3">
                           {post.replies.map((reply) => (
                             <div
@@ -487,7 +523,20 @@ export default function CommunityPage() {
                   )}
                 </article>
               );
-            })
+            })}
+            {hasMorePosts && (
+              <div className="pt-2 text-center">
+                <button
+                  type="button"
+                  disabled={isLoadingMorePosts}
+                  onClick={() => void loadNextPostsPage()}
+                  className="rounded-full border border-line bg-surface px-6 py-2.5 text-xs font-semibold text-ink hover:border-brand disabled:opacity-60"
+                >
+                  {isLoadingMorePosts ? 'Loading more…' : 'Load more discussions'}
+                </button>
+              </div>
+            )}
+            </>
           ) : (
             <div className="rounded-3xl border border-dashed border-line bg-surface p-12 text-center">
               <HelpCircleIcon className="mx-auto h-10 w-10 text-body/60" />
@@ -504,6 +553,16 @@ export default function CommunityPage() {
               >
                 Clear search
               </button>
+              {hasMorePosts && (
+                <button
+                  type="button"
+                  disabled={isLoadingMorePosts}
+                  onClick={() => void loadNextPostsPage()}
+                  className="ml-3 mt-5 inline-flex items-center rounded-full border border-line px-5 py-2 text-xs font-medium text-ink disabled:opacity-60"
+                >
+                  {isLoadingMorePosts ? 'Loading…' : 'Load more discussions'}
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -576,7 +635,7 @@ export default function CommunityPage() {
                   <h2 className="font-serif text-2xl font-bold text-ink">Ask a Question or Post</h2>
                   <p className="text-xs text-body mt-0.5">
                     Share your experience or ask the community for suggestions as{' '}
-                    <strong className="text-ink font-semibold">{user?.name || postAuthor}</strong>.
+                    <strong className="text-ink font-semibold">{user?.name || 'Community Member'}</strong>.
                   </p>
                 </div>
                 <button
@@ -605,18 +664,24 @@ export default function CommunityPage() {
                   />
                 </div>
 
-                {/* Topic Tag */}
+                {/* Category */}
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-ink">
-                    Topic Tag (Optional)
+                    Category
                   </label>
-                  <input
-                    type="text"
-                    value={postTag}
-                    onChange={(e) => setPostTag(e.target.value)}
-                    placeholder="e.g. Grounding, Sleep, Panic Attack, Coping Strategy"
+                  <select
+                    value={postCategory}
+                    onChange={(e) => setPostCategory(e.target.value)}
                     className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-4 py-2.5 text-xs text-ink focus:border-brand focus:outline-none"
-                  />
+                  >
+                    {communityCategories
+                      .filter((category) => category !== 'All Discussions')
+                      .map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                  </select>
                 </div>
 
                 {/* Content */}
@@ -634,83 +699,42 @@ export default function CommunityPage() {
                   />
                 </div>
 
-                {/* Image Upload Option */}
+                {/* Optional image URL */}
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-ink">
-                    Attach Image (Optional)
+                    Image URL (Optional)
                   </label>
                   <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleImageUpload}
-                    accept="image/*"
-                    className="hidden"
+                    type="url"
+                    value={postImage}
+                    onChange={(e) => setPostImage(e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-4 py-2.5 text-xs text-ink focus:border-brand focus:outline-none"
                   />
-
-                  {attachedImage ? (
+                  <p className="mt-1 text-[11px] text-subtle">
+                    Add a publicly accessible image URL. Direct file uploads are not supported by the community API.
+                  </p>
+                  {postImage.trim() && (
                     <div className="relative mt-2 overflow-hidden rounded-2xl border border-line bg-canvas p-2">
                       <img
-                        src={attachedImage}
-                        alt="Attached preview"
+                        src={postImage}
+                        alt="Post image preview"
                         className="max-h-48 w-full rounded-xl object-cover"
                       />
                       <button
                         type="button"
-                        onClick={() => setAttachedImage(null)}
+                        onClick={() => setPostImage('')}
                         className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-white hover:bg-black"
                       >
                         <XIcon className="h-3.5 w-3.5" />
                       </button>
                     </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="mt-1.5 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-line bg-canvas py-4 text-xs font-medium text-body hover:border-brand hover:text-ink"
-                    >
-                      <ImageIcon className="h-4 w-4 text-brand" />
-                      <span>Click to attach a photo or visual screenshot (Max 5MB)</span>
-                    </button>
                   )}
                 </div>
 
-                {/* Author Name Selection */}
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-ink">
-                    Display Author Name
-                  </label>
-                  <div className="mt-1.5 flex flex-wrap gap-2">
-                    {user?.name && (
-                      <button
-                        type="button"
-                        onClick={() => setPostAuthor(user.name)}
-                        className={cn(
-                          'rounded-full border px-3 py-1 text-xs transition-colors',
-                          postAuthor === user.name
-                            ? 'border-brand bg-brand text-white font-medium'
-                            : 'border-line bg-canvas text-body hover:border-brand'
-                        )}
-                      >
-                        {user.name} (My Profile)
-                      </button>
-                    )}
-                    {anonymousAliases.slice(0, 4).map((alias) => (
-                      <button
-                        key={alias}
-                        type="button"
-                        onClick={() => setPostAuthor(alias)}
-                        className={cn(
-                          'rounded-full border px-3 py-1 text-xs transition-colors',
-                          postAuthor === alias
-                            ? 'border-brand bg-brand text-white font-medium'
-                            : 'border-line bg-canvas text-body hover:border-brand'
-                        )}
-                      >
-                        {alias}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <p className="text-xs text-subtle">
+                  Your account profile name will be shown as the post author.
+                </p>
 
                 {/* Submit Action */}
                 <div className="mt-6 flex items-center justify-end gap-3 border-t border-line pt-4">

@@ -33,6 +33,7 @@ export const crisisLines: CrisisLine[] = [
 export const navLinks = [
   { label: 'Home', to: '/' },
   { label: 'Resources', to: '/resources' },
+  { label: 'Packages', to: '/packages' },
   { label: 'Community', to: '/community' },
   { label: 'About Us', to: '/about' },
   { label: 'Contact', to: '/contact' },

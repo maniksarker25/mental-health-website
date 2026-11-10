@@ -19,6 +19,7 @@ export interface CommunityPost {
   createdAt: string;
   likes: number;
   replies: CommunityReply[];
+  replyCount?: number;
   isPinned?: boolean;
 }
 
@@ -30,6 +31,7 @@ export const communityCategories = [
   'Coping Strategies & Tips',
   'Grief & Loss',
   'Questions for Supporters',
+  'General Discussion',
 ];
 
 export const seedCommunityPosts: CommunityPost[] = [

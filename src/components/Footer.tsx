@@ -15,7 +15,9 @@ const resourceLinks = [
 const companyLinks = [
   { label: 'About Us', href: '/about' },
   { label: 'Clinical Review Board', href: '/about' },
-  { label: 'Privacy Approach', href: '#' },
+  { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Terms and Conditions', href: '/terms' },
+  { label: 'Frequently Asked Questions', href: '/faq' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -130,17 +132,12 @@ export function Footer() {
               © {new Date().getFullYear()} Mental Health Anonymous. Educational resources only — not a substitute for
               professional care.
             </p>
-            <div className="flex items-center gap-5 text-xs text-body">
-              <Link href="#" className="transition-colors duration-150 ease-gentle hover:text-ink">
-                Privacy Approach
-              </Link>
-              <Link href="#" className="transition-colors duration-150 ease-gentle hover:text-ink">
-                Terms
-              </Link>
-              <Link href="#" className="transition-colors duration-150 ease-gentle hover:text-ink">
-                Zero Retention Policy
-              </Link>
-            </div>
+            <Link
+              href="/privacy"
+              className="text-xs text-body transition-colors duration-150 ease-gentle hover:text-ink"
+            >
+              Privacy Policy
+            </Link>
           </div>
         </div>
       </div>

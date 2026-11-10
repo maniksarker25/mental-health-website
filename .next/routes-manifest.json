@@ -20,6 +20,14 @@
   },
   "dynamicRoutes": [
     {
+      "page": "/api/community/[[...segments]]",
+      "regex": "^/api/community(?:/(.+?))?(?:/)?$",
+      "routeKeys": {
+        "nxtPsegments": "nxtPsegments"
+      },
+      "namedRegex": "^/api/community(?:/(?<nxtPsegments>.+?))?(?:/)?$"
+    },
+    {
       "page": "/articles/[id]",
       "regex": "^/articles/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -82,6 +90,12 @@
       "namedRegex": "^/contact(?:/)?$"
     },
     {
+      "page": "/faq",
+      "regex": "^/faq(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/faq(?:/)?$"
+    },
+    {
       "page": "/forgot-password",
       "regex": "^/forgot\\-password(?:/)?$",
       "routeKeys": {},
@@ -100,6 +114,12 @@
       "namedRegex": "^/packages(?:/)?$"
     },
     {
+      "page": "/privacy",
+      "regex": "^/privacy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privacy(?:/)?$"
+    },
+    {
       "page": "/register",
       "regex": "^/register(?:/)?$",
       "routeKeys": {},
@@ -110,6 +130,18 @@
       "regex": "^/resources(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/resources(?:/)?$"
+    },
+    {
+      "page": "/send-message",
+      "regex": "^/send\\-message(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/send\\-message(?:/)?$"
+    },
+    {
+      "page": "/terms",
+      "regex": "^/terms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terms(?:/)?$"
     }
   ],
   "dataRoutes": [],

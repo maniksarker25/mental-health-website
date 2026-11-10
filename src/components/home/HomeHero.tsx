@@ -6,9 +6,9 @@ import { motion } from 'framer-motion';
 import { ArrowRightIcon, EyeOffIcon, ShieldCheckIcon, HeartHandshakeIcon, PlayIcon, SparklesIcon, UsersIcon } from 'lucide-react';
 
 const trustPills = [
-  { label: '100% Confidential', icon: ShieldCheckIcon },
-  { label: 'Zero Data Retained', icon: EyeOffIcon },
-  { label: 'Clinically Vetted', icon: HeartHandshakeIcon },
+  { label: 'Step-by-step setup', icon: ShieldCheckIcon },
+  { label: 'Email or SMS preview', icon: EyeOffIcon },
+  { label: 'Clinically reviewed guides', icon: HeartHandshakeIcon },
 ];
 
 export function HomeHero() {
@@ -44,21 +44,28 @@ export function HomeHero() {
             transition={{ duration: 0.3, delay: 0.08, ease: [0.23, 1, 0.32, 1] }}
             className="mt-6 max-w-xl text-base leading-relaxed text-body sm:text-lg"
           >
-           Choose a clinically reviewed guide and dispatch it anonymously by text or email. No sender name, zero accounts for the recipient, and nothing stored on our servers - just a calm, shame-free explanation waiting whenever they are ready.
+            Choose a topic and package, enter recipient details, and review an email or SMS preview. Message delivery and payment are not available yet.
           </motion.p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Link
-              href="/resources"
+              href="/send-message"
               className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-medium text-white shadow-sm transition-transform duration-150 ease-gentle hover:scale-[1.02] active:scale-[0.98]"
             >
-              Explore resources
+              Send a message
               <ArrowRightIcon className="h-4 w-4" />
+            </Link>
+
+            <Link
+              href="/resources"
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-canvas px-5 py-3.5 text-sm font-medium text-ink transition-colors duration-150 ease-gentle hover:border-brand hover:bg-brand-tint"
+            >
+              Explore resources
             </Link>
 
             <a
               href="#how-it-works-video"
-              className="inline-flex items-center gap-2 rounded-full border border-line bg-canvas px-5 py-3.5 text-sm font-medium text-ink transition-colors duration-150 ease-gentle hover:border-brand hover:bg-brand-tint"
+              className="inline-flex items-center gap-2 rounded-full px-4 py-3.5 text-sm font-medium text-body transition-colors duration-150 ease-gentle hover:text-ink"
             >
               <PlayIcon className="h-4 w-4 text-brand fill-current" />
               How it works video
