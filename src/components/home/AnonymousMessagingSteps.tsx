@@ -8,22 +8,22 @@ const steps = [
     number: '01',
     title: 'Choose a topic',
     description:
-      'Start with a topic that fits the kind of support you want to share.',
-    detail: 'Choose from the available mental health topics',
+      'Choose a topic, then select published resources that may be helpful to the recipient.',
+    detail: 'Select multiple published guides',
   },
   {
     number: '02',
     title: 'Add recipient and delivery details',
     description:
-      'Enter the recipient contact and choose email or SMS. You can review your choices before finishing.',
-    detail: 'Recipient details stay in the page preview',
+      'Enter an email address or phone number and include an optional supportive note.',
+    detail: 'Choose email or SMS delivery',
   },
   {
     number: '03',
-    title: 'Review the dispatch preview',
+    title: 'Review and send',
     description:
-      'The website currently provides a guided preview only. Message delivery and payment are not connected yet.',
-    detail: 'Nothing is sent or saved when you finish',
+      'Confirm your selections and send. The recipient sees the message without your identity.',
+    detail: 'Free for signed-in users',
   },
 ];
 
@@ -48,7 +48,7 @@ export function AnonymousMessagingSteps() {
               Prepare a message, one step at a time.
             </h2>
             <p className="mt-4 text-base leading-relaxed text-body sm:text-lg">
-              Choose a topic, enter recipient details, and review your delivery choice. Actual message delivery is not available yet.
+              Choose a package first, then select a topic and resources, enter recipient details, and send by email or SMS.
             </p>
           </div>
         </div>

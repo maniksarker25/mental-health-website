@@ -17,3 +17,44 @@ Set `NEXT_PUBLIC_API_BASE_URL` in the website root `.env.local` file to the back
 origin (or its `/api/v1` URL). This is a public API URL, not a secret. The auth
 proxy uses it for regular-user sign-in, email verification, password reset, and
 HTTP-only session cookies.
+
+## Website package payments
+
+Configure these variables in the backend environment (never in the browser):
+
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `STRIPE_PRICE_BASIC`
+- `STRIPE_PRICE_STANDARD`
+- `STRIPE_PRICE_PREMIUM`
+- `WEBSITE_URL` (the existing backend setting, used for Checkout return URLs)
+
+Each Stripe Price must be active, one-time, in USD, and match the website's
+displayed amounts: Basic `$49`, Standard `$79`, Premium `$149`. The backend
+creates Checkout sessions from these Price IDs and only a verified webhook
+confirms payment and grants one message credit.
+
+In Stripe Dashboard, add a webhook endpoint at
+`https://<backend-host>/api/v1/package-purchase/stripe-webhook` and subscribe to:
+
+- `checkout.session.completed`
+- `checkout.session.async_payment_succeeded`
+- `checkout.session.async_payment_failed`
+- `checkout.session.expired`
+- `charge.refunded`
+- `charge.dispute.created`
+
+The mobile app currently cannot send messages under the new credit requirement.
+Apple App Store and Google Play purchase verification must be integrated before
+re-enabling message sending in the app.
+
+Premium consultation scheduling is still arranged manually; the Stripe flow
+does not yet deliver a consultation booking link automatically.
+
+If upgrading an existing database, inspect the `packagepurchases` collection
+indexes before deployment. Remove the obsolete standalone `transactionId_1`
+index if present. If the unique
+`billingProvider_1_providerTransactionId_1` index exists without a
+`partialFilterExpression`, drop that old index so the updated model can create
+the partial unique index (pending purchases have no transaction ID yet).
+Do not drop indexes by pattern or without checking their definitions.

@@ -28,6 +28,14 @@
       "namedRegex": "^/api/community(?:/(?<nxtPsegments>.+?))?(?:/)?$"
     },
     {
+      "page": "/api/package-purchase/session/[sessionId]",
+      "regex": "^/api/package\\-purchase/session/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPsessionId": "nxtPsessionId"
+      },
+      "namedRegex": "^/api/package\\-purchase/session/(?<nxtPsessionId>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/articles/[id]",
       "regex": "^/articles/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -112,6 +120,12 @@
       "regex": "^/packages(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/packages(?:/)?$"
+    },
+    {
+      "page": "/packages/success",
+      "regex": "^/packages/success(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/packages/success(?:/)?$"
     },
     {
       "page": "/privacy",

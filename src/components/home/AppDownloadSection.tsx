@@ -133,7 +133,7 @@ export function AppDownloadSection() {
       'grief-loss': 'grief-and-loss',
     };
     const topicId = topicIds[selectedTopic.id];
-    router.push(topicId ? `/send-message?topic=${topicId}` : '/send-message');
+    router.push(topicId ? `/packages?topic=${topicId}` : '/packages');
   };
 
   const handleStoreClick = (storeName: string) => {
@@ -169,12 +169,12 @@ export function AppDownloadSection() {
               id="download-heading"
               className="mt-4 font-serif text-3xl leading-tight text-ink sm:text-4xl lg:text-5xl"
             >
-              Preview the message setup flow.
+              See how message setup works.
             </h2>
 
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-body">
-              Explore the topic-selection screen, then continue to the website preview to choose a package,
-              enter recipient details, and review an email or SMS option. Delivery is not connected yet.
+              Explore the topic-selection screen, then continue to the website to choose resources, enter recipient
+              details, and use a confirmed package credit to send by email or SMS. A signed-in account is required.
             </p>
 
             {/* Key feature points */}
@@ -186,7 +186,7 @@ export function AppDownloadSection() {
                 <div>
                   <h3 className="text-sm font-semibold text-ink">Guided message setup</h3>
                   <p className="mt-1 text-xs leading-relaxed text-body">
-                    The website preview does not send or save the recipient details you enter.
+                    Sign in to send a message for free. Recipient contact and message details are retained in service records.
                   </p>
                 </div>
               </div>
@@ -638,7 +638,7 @@ export function AppDownloadSection() {
                         <div className="mt-2 flex items-start gap-2 rounded-2xl border border-[#cfdbd2] bg-[#ebf0ec] p-2.5 text-left dark:border-[#33443c] dark:bg-[#1a2420]">
                           <ShieldCheckIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand" />
                           <p className="text-[10px] leading-tight text-brand-strong dark:text-[#93c4b2]">
-                            Preview only. No message is sent or saved.
+                            This demo opens the website send form. Sign-in is required to send.
                           </p>
                         </div>
                       </div>
@@ -650,7 +650,7 @@ export function AppDownloadSection() {
                           onClick={handleSendAnonymousMessage}
                           className="w-full rounded-2xl bg-[#2e5e52] py-3 text-xs font-semibold text-white shadow-sm transition-all duration-150 hover:bg-[#24483f] active:scale-[0.98]"
                         >
-                          Continue to website preview
+                          Continue to send message
                         </button>
 
                         {/* iOS Home Indicator */}

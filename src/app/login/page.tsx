@@ -62,7 +62,7 @@ function LoginFormContent() {
           Sign In to Your Account
         </h1>
         <p className="mt-2 text-sm text-body leading-relaxed">
-          Access the community discussion board and purchase anonymous support packages.
+          Access the community discussion board and use a confirmed package credit to send an anonymous message.
         </p>
       </div>
 

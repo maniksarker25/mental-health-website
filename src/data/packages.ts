@@ -23,17 +23,17 @@ export const packagesData: PackageTier[] = [
   {
     id: 'basic',
     name: 'Basic',
-    tagline: 'Send confidential anonymous messages anytime with complete privacy.',
+    tagline: 'Send a message without including your sender identity.',
     price: 49,
     paymentType: 'One-time payment',
     popular: false,
     description:
-      'Allows you to send an anonymous message without revealing your identity, phone number, or IP address.',
+      'Send an email or SMS that does not include your sender identity.',
     features: [
       'Can send anonymous message anytime (24/7)',
-      '100% confidential & zero data retention',
+      'Recipient contact details are retained in service records',
       'Send via secure SMS or private Email',
-      'No sender identity or personal details attached',
+      'No sender identity included in the delivered message',
       'Zero account requirement for the recipient',
     ],
     ctaLabel: 'Get Basic',
@@ -92,7 +92,7 @@ export const packageFaqs = [
   {
     question: 'How do anonymous messages work in the Basic plan?',
     answer:
-      'With the Basic plan, you can dispatch an anonymous message via SMS or Email. We strip all sender information, IP addresses, and phone numbers in memory so your identity is completely protected.',
+      'Each package includes one SMS or email message. The delivered message does not include the sender’s account identity. Recipient contact information and message content are retained in service records.',
   },
   {
     question: 'What resources can I attach in the Standard plan?',
@@ -102,6 +102,6 @@ export const packageFaqs = [
   {
     question: 'How is the consultation with Dr. Skelton scheduled in Premium?',
     answer:
-      'Upon purchasing the Premium package, you will receive a private booking link to schedule your 1-on-1 consultation session with Dr. Skelton at a time convenient for you.',
+      'The Premium package includes a 1-on-1 consultation. Booking is arranged separately after purchase; an automatic booking-link delivery is not yet available.',
   },
 ];

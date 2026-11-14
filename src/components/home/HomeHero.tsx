@@ -2,16 +2,68 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowRightIcon, EyeOffIcon, ShieldCheckIcon, HeartHandshakeIcon, PlayIcon, SparklesIcon, UsersIcon } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+
+interface PackageCredit {
+  purchaseId: string;
+  packageTier: string;
+}
 
 const trustPills = [
   { label: 'Step-by-step setup', icon: ShieldCheckIcon },
-  { label: 'Email or SMS preview', icon: EyeOffIcon },
+  { label: 'Email or SMS delivery', icon: EyeOffIcon },
   { label: 'Clinically reviewed guides', icon: HeartHandshakeIcon },
 ];
 
 export function HomeHero() {
+  const router = useRouter();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const [isCheckingCredit, setIsCheckingCredit] = React.useState(false);
+  const [creditError, setCreditError] = React.useState('');
+
+  const startMessageFlow = async () => {
+    if (isAuthLoading || isCheckingCredit) return;
+    setCreditError('');
+
+    if (!isAuthenticated) {
+      router.push('/packages');
+      return;
+    }
+
+    setIsCheckingCredit(true);
+    try {
+      const response = await fetch('/api/package-purchase/credits', {
+        credentials: 'same-origin',
+        cache: 'no-store',
+      });
+      const result = await response.json() as {
+        success?: boolean;
+        message?: string;
+        error?: string;
+        data?: PackageCredit[];
+      };
+      if (!response.ok || result.success === false || !Array.isArray(result.data)) {
+        throw new Error(result.error || result.message || 'Could not check your package credits.');
+      }
+
+      const credit = result.data[0];
+      if (credit) {
+        router.push(
+          `/send-message?purchaseId=${encodeURIComponent(credit.purchaseId)}&tier=${encodeURIComponent(credit.packageTier)}`
+        );
+      } else {
+        router.push('/packages');
+      }
+    } catch (error) {
+      setCreditError(error instanceof Error ? error.message : 'Could not check your package credits.');
+    } finally {
+      setIsCheckingCredit(false);
+    }
+  };
+
   return (
     <section className="relative overflow-hidden border-b border-line bg-canvas">
       <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:py-24 lg:px-8">
@@ -44,17 +96,19 @@ export function HomeHero() {
             transition={{ duration: 0.3, delay: 0.08, ease: [0.23, 1, 0.32, 1] }}
             className="mt-6 max-w-xl text-base leading-relaxed text-body sm:text-lg"
           >
-            Choose a topic and package, enter recipient details, and review an email or SMS preview. Message delivery and payment are not available yet.
+            Choose a one-time package, then send an anonymous email or SMS. Your identity is not included in the message.
           </motion.p>
 
           <div className="mt-9 flex flex-wrap items-center gap-3">
-            <Link
-              href="/send-message"
+            <button
+              type="button"
+              onClick={() => void startMessageFlow()}
+              disabled={isAuthLoading || isCheckingCredit}
               className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-medium text-white shadow-sm transition-transform duration-150 ease-gentle hover:scale-[1.02] active:scale-[0.98]"
             >
-              Send a message
+              {isCheckingCredit ? 'Checking package…' : 'Send a message'}
               <ArrowRightIcon className="h-4 w-4" />
-            </Link>
+            </button>
 
             <Link
               href="/resources"
@@ -78,6 +132,11 @@ export function HomeHero() {
               View packages
             </a>
           </div>
+          {creditError && (
+            <p role="alert" className="mt-3 max-w-xl rounded-xl border border-blush-border bg-blush-bg p-3 text-sm text-blush-text">
+              {creditError}
+            </p>
+          )}
 
           <ul className="mt-10 flex flex-wrap gap-2.5">
             {trustPills.map((pill, index) => (

@@ -60,7 +60,7 @@ export async function requestBackend<T = unknown>(
         ...init.headers,
       },
       cache: 'no-store',
-      signal: AbortSignal.timeout(15000),
+      signal: init.signal ?? AbortSignal.timeout(15000),
     });
   } catch {
     throw new BackendRequestError('Could not connect to the mental-health API.', 502);

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import Link from 'next/link';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -11,11 +12,11 @@ import {
   MessageSquareTextIcon,
   ShieldAlertIcon,
 } from 'lucide-react';
-import { packagesData } from '../data/packages';
 import type { PublicTopic } from '../types/publicTopic';
 import { getPublicResourceTopic, type PublicResource } from '../types/resource';
 import { topicIcons, toneStyles } from '../utils/tone';
 import { cn } from '../utils/cn';
+import { useAuth } from '../contexts/AuthContext';
 
 type DeliveryMethod = 'email' | 'sms';
 
@@ -44,15 +45,17 @@ function maskDestination(method: DeliveryMethod, recipient: RecipientDetails): s
 }
 
 export function SendMessageWizard({
-  initialPackageId,
   initialTopicId,
+  packagePurchaseId,
+  packageTier,
   topics,
   topicsUnavailable,
   resources,
   resourcesUnavailable,
 }: {
-  initialPackageId?: string;
   initialTopicId?: string;
+  packagePurchaseId?: string;
+  packageTier?: string;
   topics: PublicTopic[];
   topicsUnavailable: boolean;
   resources: PublicResource[];
@@ -62,9 +65,6 @@ export function SendMessageWizard({
   const [selectedTopicId, setSelectedTopicId] = useState(
     topics.find((item) => item.slug === initialTopicId || item._id === initialTopicId)?.slug ?? ''
   );
-  const [selectedPackageId, setSelectedPackageId] = useState(
-    packagesData.some((item) => item.id === initialPackageId) ? initialPackageId! : ''
-  );
   const [selectedResourceIds, setSelectedResourceIds] = useState<string[]>([]);
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('email');
   const [recipient, setRecipient] = useState<RecipientDetails>({
@@ -73,11 +73,14 @@ export function SendMessageWizard({
     phone: '',
     note: '',
   });
-  const [understandsPreview, setUnderstandsPreview] = useState(false);
+  const [confirmsSending, setConfirmsSending] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [sendError, setSendError] = useState('');
+  const idempotencyKeyRef = useRef<string | undefined>(undefined);
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
   const selectedTopic = topics.find((topic) => topic.slug === selectedTopicId);
-  const selectedPackage = packagesData.find((item) => item.id === selectedPackageId);
   const matchingResources = selectedTopic
     ? resources.filter((resource) => {
         const resourceTopic = getPublicResourceTopic(resource);
@@ -97,11 +100,6 @@ export function SendMessageWizard({
     setRecipient((current) => ({ ...current, [field]: value }));
   };
 
-  const finishPreview = () => {
-    setRecipient({ name: '', email: '', phone: '', note: '' });
-    setCompleted(true);
-  };
-
   if (completed) {
     return (
       <section className="bg-canvas px-4 py-16 sm:px-6 lg:px-8">
@@ -109,10 +107,9 @@ export function SendMessageWizard({
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-tint text-brand">
             <CheckCircle2Icon className="h-7 w-7" />
           </div>
-          <h1 className="mt-5 font-serif text-3xl text-ink">Preview complete</h1>
+          <h1 className="mt-5 font-serif text-3xl text-ink">Message accepted for delivery</h1>
           <p className="mt-3 text-sm leading-relaxed text-body">
-            Your selections were reviewed in this page, but no message was sent and no recipient details were saved.
-            Message delivery and payment are not connected yet.
+            The delivery provider accepted the message. Final delivery depends on the email provider or mobile carrier.
           </p>
           <a
             href="/"
@@ -125,17 +122,73 @@ export function SendMessageWizard({
     );
   }
 
+  if (isAuthLoading) {
+    return (
+      <section className="bg-canvas px-4 py-16 sm:px-6 lg:px-8" aria-busy="true">
+        <div className="mx-auto max-w-2xl rounded-3xl border border-line bg-surface p-8 text-center text-sm text-body">
+          Checking your sign-in…
+        </div>
+      </section>
+    );
+  }
+
+  if (!isAuthenticated) {
+    const redirectPath = `/send-message${packagePurchaseId ? `?purchaseId=${encodeURIComponent(packagePurchaseId)}&tier=${encodeURIComponent(packageTier ?? '')}` : ''}`;
+    return (
+      <section className="bg-canvas px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl rounded-3xl border border-line bg-surface p-8 text-center shadow-sm sm:p-12">
+          <h1 className="font-serif text-3xl text-ink">Sign in to send a message</h1>
+          <p className="mt-3 text-sm leading-relaxed text-body">
+            A confirmed package credit and an account are required. Sign in before entering recipient details.
+          </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
+            <Link
+              href={`/login?redirect=${encodeURIComponent(redirectPath)}`}
+              className="rounded-full bg-brand px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-strong"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/register"
+              className="rounded-full border border-line px-6 py-3 text-sm font-medium text-ink transition-colors hover:border-brand"
+            >
+              Create account
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!packagePurchaseId) {
+    return (
+      <section className="bg-canvas px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl rounded-3xl border border-line bg-surface p-8 text-center shadow-sm sm:p-12">
+          <h1 className="font-serif text-3xl text-ink">A package credit is required</h1>
+          <p className="mt-3 text-sm leading-relaxed text-body">
+            Choose a one-time package first. Once Stripe confirms payment, you can use its one message credit here.
+          </p>
+          <Link href="/packages" className="mt-7 inline-flex rounded-full bg-brand px-6 py-3 text-sm font-medium text-white hover:bg-brand-strong">
+            View packages
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
   const continueFromRecipient = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStep(3);
   };
 
   const toggleResource = (resourceId: string) => {
-    setSelectedResourceIds((current) =>
-      current.includes(resourceId)
-        ? current.filter((id) => id !== resourceId)
-        : [...current, resourceId]
-    );
+    setSelectedResourceIds((current) => {
+      if (current.includes(resourceId)) {
+        return current.filter((id) => id !== resourceId);
+      }
+      if (current.length >= 5) return current;
+      return [...current, resourceId];
+    });
   };
 
   return (
@@ -157,8 +210,8 @@ export function SendMessageWizard({
         >
           <ShieldAlertIcon className="mt-0.5 h-5 w-5 shrink-0" />
           <p className="text-sm leading-relaxed">
-            <strong>Preview only:</strong> message delivery and payment are not available yet. Your recipient
-            details stay in this page and are not submitted or saved.
+            This message uses one credit from your confirmed {packageTier || 'package'} package. Your sender identity is not included in the message, but
+            recipient contact details and message content are stored in the service's message records.
           </p>
         </div>
 
@@ -224,6 +277,12 @@ export function SendMessageWizard({
           {step === 1 && (
             <div>
               <h2 className="font-serif text-2xl text-ink">Choose resources to share</h2>
+              {packageTier === 'basic' ? (
+                <p className="mt-2 text-sm text-body">
+                  Resource attachments are not included with the Basic package. Continue to enter the recipient.
+                </p>
+              ) : (
+                <>
               <p className="mt-2 text-sm text-body">
                 Select one or more published guides for {selectedTopic?.name || 'your topic'}. You can skip this step.
               </p>
@@ -238,6 +297,9 @@ export function SendMessageWizard({
                 </p>
               ) : (
                 <>
+                  <p className="mt-4 text-xs text-body">
+                    Choose up to 5 resources. You can continue without selecting any.
+                  </p>
                   {matchingResources.length === 0 && (
                     <p className="mt-4 text-xs text-body">
                       No guides are specifically tagged to this topic yet, so all published resources are shown.
@@ -252,9 +314,10 @@ export function SendMessageWizard({
                           key={resource._id}
                           type="button"
                           aria-pressed={selected}
+                          disabled={!selected && selectedResourceIds.length >= 5}
                           onClick={() => toggleResource(resource._id)}
                           className={cn(
-                            'flex items-start gap-3 rounded-2xl border p-4 text-left transition-colors',
+                            'flex items-start gap-3 rounded-2xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50',
                             selected ? 'border-brand bg-brand-tint/40' : 'border-line hover:border-brand/50'
                           )}
                         >
@@ -277,6 +340,8 @@ export function SendMessageWizard({
                   </div>
                 </>
               )}
+                </>
+              )}
             </div>
           )}
 
@@ -284,7 +349,7 @@ export function SendMessageWizard({
             <div>
               <h2 className="font-serif text-2xl text-ink">Recipient and delivery</h2>
               <p className="mt-2 text-sm text-body">
-                Choose a delivery method, then enter the matching contact. This preview will not send it.
+                Choose how to deliver your message and enter the recipient's contact details.
               </p>
 
               <form className="mt-6 space-y-6" onSubmit={continueFromRecipient}>
@@ -380,7 +445,7 @@ export function SendMessageWizard({
             <div>
               <h2 className="font-serif text-2xl text-ink">Review your choices</h2>
               <p className="mt-2 text-sm text-body">
-                Check the preview below. No message is sent when you finish.
+                Confirm the recipient, resource links, and delivery method before sending.
               </p>
 
               <dl className="mt-6 divide-y divide-line rounded-2xl border border-line px-4">
@@ -394,9 +459,6 @@ export function SendMessageWizard({
                       : 'None selected'}
                   </span>
                 </ReviewRow>
-                {selectedPackage && <ReviewRow label="Package">
-                  <span>{selectedPackage.name} · ${selectedPackage.price} USD</span>
-                </ReviewRow>}
                 <ReviewRow label="Delivery" onEdit={() => setStep(2)}>
                   <span className="inline-flex items-center gap-2">
                     {deliveryMethod === 'email' ? (
@@ -424,23 +486,71 @@ export function SendMessageWizard({
                 <input
                   type="checkbox"
                   className="mt-0.5 h-4 w-4 accent-brand"
-                  checked={understandsPreview}
-                  onChange={(event) => setUnderstandsPreview(event.target.checked)}
+                  checked={confirmsSending}
+                  onChange={(event) => setConfirmsSending(event.target.checked)}
                 />
                 <span>
-                  I understand this is a preview only. No payment will be taken and no message will be sent.
+                  I confirm I have a good-faith reason to contact this person and this message is supportive, not
+                  threatening or harassing. I understand this uses one package credit, my identity is not shown
+                  to the recipient, and recipient contact details and message content are retained in service records.
                 </span>
               </label>
+
+              {sendError && (
+                <p role="alert" className="mt-4 rounded-xl border border-blush-border bg-blush-bg p-3 text-sm text-blush-text">
+                  {sendError}
+                </p>
+              )}
 
               <div className="mt-6 flex justify-between border-t border-line pt-5">
                 <BackButton onClick={() => setStep(2)} />
                 <button
                   type="button"
-                  onClick={finishPreview}
-                  disabled={!understandsPreview}
+                  onClick={async () => {
+                    if (!selectedTopic) {
+                      setSendError('Please select a topic before sending.');
+                      setStep(0);
+                      return;
+                    }
+                    setIsSending(true);
+                    setSendError('');
+                    idempotencyKeyRef.current ??= crypto.randomUUID();
+                    try {
+                      const response = await fetch('/api/messages', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Idempotency-Key': idempotencyKeyRef.current,
+                        },
+                        body: JSON.stringify({
+                          channel: deliveryMethod,
+                          packagePurchaseId,
+                          topic: selectedTopic._id,
+                          articles: selectedResourceIds,
+                          senderAttestation: true,
+                          recipientName: recipient.name.trim() || undefined,
+                          recipientEmail: deliveryMethod === 'email' ? recipient.email.trim() : undefined,
+                          recipientPhone: deliveryMethod === 'sms' ? recipient.phone.trim() : undefined,
+                          customNote: recipient.note.trim() || undefined,
+                        }),
+                      });
+                      const result = await response.json() as { message?: string; error?: string; success?: boolean };
+                      if (!response.ok || result.success === false) {
+                        throw new Error(result.error || result.message || 'The message could not be sent.');
+                      }
+                      setCompleted(true);
+                    } catch (error) {
+                      setSendError(error instanceof Error ? error.message : 'The message could not be sent.');
+                    } finally {
+                      setIsSending(false);
+                    }
+                  }}
+                  disabled={!confirmsSending || isSending}
                   className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-strong disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Finish preview <CheckCircle2Icon className="h-4 w-4" />
+                  {isSending ? 'Sending…' : 'Send anonymously'}
+                  <CheckCircle2Icon className="h-4 w-4" />
                 </button>
               </div>
             </div>

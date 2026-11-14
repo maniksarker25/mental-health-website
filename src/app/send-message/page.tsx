@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { SendMessageWizard } from '../../components/SendMessageWizard';
-import { packagesData } from '../../data/packages';
 import { fetchPublishedResources } from '../../lib/server/resources';
 import { fetchPublicTopics } from '../../lib/server/topics';
 import type { PublicResource } from '../../types/resource';
@@ -10,18 +9,22 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Prepare a Message — Mental Health Anonymous',
   description:
-    'Choose a mental health topic and published resources, add recipient details, and review your message dispatch preview.',
+    'Use a confirmed package credit to send an anonymous message by email or SMS.',
 };
 
 export default async function SendMessagePage({
   searchParams,
 }: {
-  searchParams: Promise<{ package?: string | string[]; topic?: string | string[] }>;
+  searchParams: Promise<{
+    topic?: string | string[];
+    purchaseId?: string | string[];
+    tier?: string | string[];
+  }>;
 }) {
   const params = await searchParams;
-  const packageId = Array.isArray(params.package) ? params.package[0] : params.package;
   const topicId = Array.isArray(params.topic) ? params.topic[0] : params.topic;
-  const initialPackageId = packagesData.some((item) => item.id === packageId) ? packageId : undefined;
+  const packagePurchaseId = Array.isArray(params.purchaseId) ? params.purchaseId[0] : params.purchaseId;
+  const packageTier = Array.isArray(params.tier) ? params.tier[0] : params.tier;
   let topics: PublicTopic[] = [];
   let topicsUnavailable = false;
   let resources: PublicResource[] = [];
@@ -45,8 +48,9 @@ export default async function SendMessagePage({
 
   return (
     <SendMessageWizard
-      initialPackageId={initialPackageId}
       initialTopicId={topicId}
+      packagePurchaseId={packagePurchaseId}
+      packageTier={packageTier}
       topics={topics}
       topicsUnavailable={topicsUnavailable}
       resources={resources}

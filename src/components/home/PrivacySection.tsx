@@ -1,26 +1,26 @@
 import React from 'react';
-import { CookieIcon, DatabaseIcon, FingerprintIcon, UserXIcon } from 'lucide-react';
+import { CreditCardIcon, DatabaseIcon, FingerprintIcon, UserXIcon } from 'lucide-react';
 
 const guarantees = [
 {
-  title: 'No IP logging',
-  body: 'Requests are handled in memory and never written to a log file. We cannot tell you where a dispatch came from because we never learn it.',
+  title: 'Sender identity stays private from recipients',
+  body: 'The sender’s account identity is not included in the delivered message.',
   icon: FingerprintIcon
 },
 {
-  title: 'No accounts for recipients',
-  body: 'A resource link opens straight into the guide. No email capture, no sign-up wall, no “verify to continue”.',
+  title: 'Account required to send',
+  body: 'Only signed-in users can submit a message for delivery.',
   icon: UserXIcon
 },
 {
-  title: 'No stored personal data',
-  body: 'Phone numbers and email addresses are used once to deliver the link and are then discarded — not archived, not hashed for later.',
+  title: 'Dispatch information is retained',
+  body: 'The sender account reference, recipient contact details, selected resources, and message content are stored in service records.',
   icon: DatabaseIcon
 },
 {
-  title: 'No third-party trackers',
-  body: 'No analytics scripts, advertising pixels, or cross-site cookies anywhere on this site, including the guides themselves.',
-  icon: CookieIcon
+  title: 'No payment required',
+  body: 'Message sending is currently free. A payment is not taken when submitting a dispatch.',
+  icon: CreditCardIcon
 }];
 
 
@@ -29,13 +29,13 @@ export function PrivacySection() {
     <section aria-labelledby="privacy-heading" className="border-y border-line bg-surface">
       <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-20">
         <div className="lg:col-span-5">
-          <p className="text-sm font-medium text-brand">Safety architecture</p>
+          <p className="text-sm font-medium text-brand">Message privacy</p>
           <h2 id="privacy-heading" className="mt-3 font-serif text-3xl leading-tight text-ink sm:text-4xl">
-            Zero retention is a design constraint, not a policy promise.
+            Anonymous to the recipient. Transparent about service records.
           </h2>
           <p className="mt-5 max-w-md text-sm leading-relaxed text-body">
-            The safest data is the data that was never collected. We built dispatch so that there is nothing to leak,
-            subpoena, or sell — and so that nobody has to trust our intentions to trust the service.
+            The recipient does not see the sender’s account identity. To send and support a dispatch, the service
+            stores the sender account reference, recipient contact details, and message content.
           </p>
         </div>
 

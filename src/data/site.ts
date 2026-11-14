@@ -48,7 +48,7 @@ export const howItWorks = [
 },
 {
   step: 'Dispatch anonymously',
-  body: 'Send the resource as a plain link by SMS or email. Your name is never attached, nothing is logged, and the link contains no identifiers or tracking parameters.',
+  body: 'Send the resource as a plain link by SMS or email. Your account identity is not included in the message, but contact details and message content are retained in service records.',
   detail: 'No sender identity, no read receipts'
 },
 {
@@ -60,9 +60,9 @@ export const howItWorks = [
 
 export const contactFaqs = [
 {
-  question: 'Can you tell me who sent me a resource link?',
+  question: 'Can the recipient see who sent a resource link?',
   answer:
-  'No. We never record who dispatches a resource, so there is nothing for us to look up. Dispatches carry no sender identity, IP address, or device fingerprint.'
+  'The sender’s account identity is not included in the delivered message. To operate the service, we retain the sender account reference, recipient contact details, and message content in service records.'
 },
 {
   question: 'Do you offer therapy or crisis counselling?',
@@ -83,8 +83,8 @@ export const contactFaqs = [
 
 export const commitments = [
 {
-  title: 'Zero retention',
-  body: 'Dispatch requests are processed in memory and discarded. We keep no message logs, no recipient lists, and no IP records.'
+  title: 'Anonymous to the recipient',
+  body: 'The sender’s account identity is not included in the email or SMS. The service retains dispatch details in message records.'
 },
 {
   title: 'Zero advertising',

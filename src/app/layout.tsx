@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://mentalhealthanonymous.app'),
   title: 'Mental Health Anonymous — Anonymous Resource Dispatch',
   description:
-    'Choose a clinically reviewed mental health guide and dispatch it anonymously via SMS or email with zero tracking, zero accounts, and complete privacy.',
+    'Choose a one-time support package and share a clinically reviewed mental health guide anonymously by email or SMS.',
   keywords: [
     'mental health',
     'support guides',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Mental Health Anonymous — Anonymous Resource Dispatch',
     description:
-      'Send a calm, shame-free educational guide to someone who needs it. Zero retention, no accounts, 100% confidential.',
+      'Share a calm, shame-free educational guide by email or SMS with a one-time package.',
     type: 'website',
     locale: 'en_US',
     siteName: 'Mental Health Anonymous',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Mental Health Anonymous — Anonymous Resource Dispatch',
     description:
-      'Send a calm, shame-free educational guide to someone who needs it. Zero retention, no accounts, 100% confidential.',
+      'Share a calm, shame-free educational guide by email or SMS with a one-time package.',
   },
   robots: {
     index: true,
